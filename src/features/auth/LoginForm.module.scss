@@ -1,0 +1,86 @@
+.page {
+  min-height: 100dvh;
+  background: radial-gradient(ellipse at 50% 10%, #ff6b2b10, transparent 55%);
+  padding: 24px;
+}
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: auto;
+}
+.card {
+  width: min(100%, 440px);
+  margin: 70px auto 32px;
+  padding: 32px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #121418e8;
+  h1 {
+    margin: 20px 0 8px;
+    font-size: 28px;
+  }
+  p {
+    margin: 0 0 20px;
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  label {
+    font-size: 13px;
+    margin-top: 8px;
+  }
+  form > button {
+    margin-top: 14px;
+  }
+  small {
+    display: block;
+    text-align: center;
+    color: var(--muted);
+    margin-top: 20px;
+  }
+}
+.icon {
+  display: inline-flex;
+  padding: 12px;
+  border: 1px solid #ff6b2b38;
+  background: #ff6b2b12;
+  border-radius: 10px;
+  color: var(--orange);
+}
+.password {
+  display: flex;
+  position: relative;
+  input {
+    width: 100%;
+    padding-right: 48px;
+  }
+  button {
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    background: none;
+    border: 0;
+    padding: 10px;
+  }
+}
+.preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #ffb59a;
+  padding-top: 24px;
+}
+@media (max-width: 500px) {
+  .card {
+    margin-top: 40px;
+    padding: 24px;
+  }
+  .page {
+    padding: 16px;
+  }
+}

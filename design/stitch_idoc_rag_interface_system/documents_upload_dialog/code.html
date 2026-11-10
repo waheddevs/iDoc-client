@@ -1,0 +1,461 @@
+<!DOCTYPE html><html class="dark" lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_dashboard" name="shell-type"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Manrope:wght@500;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-secondary": "#5d1800", "error-container": "#93000a", "secondary-fixed-dim": "#ffb59d", "surface-container-low": "#1a1c20", "tertiary": "#ffb59f", "surface-container-highest": "#333539", "on-secondary-container": "#ffd8cc", "primary-fixed-dim": "#ffb59a", "surface-tint": "#ffb59a", "surface-dim": "#111317", "surface-container-high": "#282a2e", "on-secondary-fixed-variant": "#832600", "tertiary-fixed-dim": "#ffb59f", "on-tertiary-fixed": "#3a0a00", "surface": "#111317", "primary-fixed": "#ffdbce", "primary": "#ffb59a", "inverse-on-surface": "#2f3035", "outline-variant": "#594138", "on-tertiary": "#5f1600", "secondary-container": "#b43700", "error": "#ffb4ab", "on-surface": "#e2e2e8", "secondary-fixed": "#ffdbd0", "background": "#111317", "on-primary": "#5b1b00", "tertiary-container": "#f2744d", "on-error": "#690005", "on-tertiary-container": "#601700", "secondary": "#ffb59d", "inverse-surface": "#e2e2e8", "surface-bright": "#37393e", "on-surface-variant": "#e2bfb3", "outline": "#a98a7f", "on-error-container": "#ffdad6", "on-secondary-fixed": "#390c00", "on-primary-container": "#5c1c00", "on-background": "#e2e2e8", "surface-variant": "#333539", "inverse-primary": "#a83900", "on-primary-fixed-variant": "#802a00", "on-primary-fixed": "#380d00", "surface-container-lowest": "#0c0e12", "tertiary-fixed": "#ffdbd1", "primary-container": "#ff6b2b", "on-tertiary-fixed-variant": "#842503", "surface-container": "#1e2024" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "space-xs": "0.25rem", "margin-desktop": "2rem", "space-md": "1rem", "space-sm": "0.5rem", "gutter-desktop": "1.5rem", "space-lg": "1.5rem", "margin": "1rem", "gutter": "1rem", "space-xl": "2rem" }, "fontFamily": { "body-sm": ["Inter"], "label-md": ["Inter"], "label-sm": ["Inter"], "title-md": ["Manrope"], "display-hero-mobile": ["Manrope"], "headline-sm": ["Manrope"], "headline-md": ["Manrope"], "display-hero": ["Manrope"], "headline-lg-mobile": ["Manrope"], "body-lg": ["Inter"], "body-md": ["Inter"], "headline-lg": ["Manrope"], "code-md": ["JetBrains Mono"] }, "fontSize": { "body-sm": ["0.8125rem", { "lineHeight": "1.375rem", "letterSpacing": "0em", "fontWeight": "400" }], "label-md": ["0.8125rem", { "lineHeight": "1rem", "letterSpacing": "0.02em", "fontWeight": "500" }], "label-sm": ["0.6875rem", { "lineHeight": "0.875rem", "letterSpacing": "0.04em", "fontWeight": "600" }], "title-md": ["1rem", { "lineHeight": "1.5rem", "letterSpacing": "-0.005em", "fontWeight": "500" }], "display-hero-mobile": ["2rem", { "lineHeight": "2.5rem", "letterSpacing": "-0.02em", "fontWeight": "700" }], "headline-sm": ["1.125rem", { "lineHeight": "1.625rem", "letterSpacing": "-0.01em", "fontWeight": "600" }], "headline-md": ["1.5rem", { "lineHeight": "2rem", "letterSpacing": "-0.015em", "fontWeight": "600" }], "display-hero": ["3rem", { "lineHeight": "3.5rem", "letterSpacing": "-0.03em", "fontWeight": "700" }], "headline-lg-mobile": ["1.5rem", { "lineHeight": "2rem", "letterSpacing": "-0.015em", "fontWeight": "600" }], "body-lg": ["1.125rem", { "lineHeight": "1.875rem", "letterSpacing": "-0.011em", "fontWeight": "400" }], "body-md": ["0.9375rem", { "lineHeight": "1.625rem", "letterSpacing": "-0.008em", "fontWeight": "400" }], "headline-lg": ["2rem", { "lineHeight": "2.5rem", "letterSpacing": "-0.02em", "fontWeight": "600" }], "code-md": ["0.8125rem", { "lineHeight": "1.375rem", "letterSpacing": "-0.01em", "fontWeight": "400" }] } } } };</script></head><body class="bg-surface-container-lowest font-body-md text-body-md text-on-surface antialiased min-h-screen"><aside class="fixed left-0 top-0 h-full w-[216px] bg-surface-container-lowest border-r border-outline-variant/30 z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="h-14 px-space-md flex items-center border-b border-outline-variant/20"><a class="flex items-center text-on-surface font-title-md text-title-md tracking-tight" data-path="chat" href="#"><span class="relative inline-flex items-center font-bold text-on-surface"><span class="text-on-surface">ı</span><span class="absolute -top-[3px] left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-primary-container"></span></span><span class="font-bold text-on-surface">Doc</span></a></div><div class="p-space-sm"><button class="w-full flex items-center gap-space-xs px-space-sm py-2 rounded-lg bg-surface-container-low border border-outline-variant/40 text-on-surface hover:bg-surface-container hover:text-on-surface hover:border-primary-container/40 transition-colors font-label-md text-label-md" type="button"><span class="material-symbols-outlined text-[18px] text-primary">add</span><span>New chat</span></button></div><nav class="flex flex-col gap-1 px-space-sm pt-space-xs" data-active-classes="bg-surface-container text-on-surface font-semibold"><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors font-label-md text-label-md" data-path="chat" href="#"><span class="relative inline-flex items-center font-bold text-on-surface"><span class="text-on-surface">ı</span><span class="absolute -top-[3px] left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-primary-container"></span></span><span class="font-bold text-on-surface">Doc</span></a><a aria-current="page" class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg transition-colors bg-surface-container text-on-surface font-semibold" data-path="documents" href="#"><span class="material-symbols-outlined text-[18px]">folder</span><span>Documents</span></a></nav></div><div class="p-space-sm border-t border-outline-variant/20 flex flex-col gap-2"><div class="flex items-center justify-between px-space-sm py-1.5 bg-surface-container-low/60 rounded-lg border border-outline-variant/20"><div class="flex items-center gap-2"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-primary-container"></span></span><span class="font-label-sm text-label-sm text-on-surface-variant">API Connected</span></div><span class="font-code-md text-[10px] text-outline">READY</span></div><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors font-label-md text-label-md" data-path="settings" href="#"><span class="material-symbols-outlined text-[18px]">settings</span><span>Settings</span></a></div></aside><div class="pl-[216px] min-h-screen flex flex-col bg-surface-container-lowest"><header class="fixed top-0 left-[216px] right-0 h-14 bg-surface-container-lowest/90 backdrop-blur-xl border-b border-outline-variant/30 z-40 px-space-lg flex items-center justify-between"><div class="flex items-center gap-space-sm"><button class="flex items-center gap-2 px-space-sm py-1.5 rounded-lg bg-surface-container-low border border-outline-variant/30 text-on-surface hover:border-outline-variant/60 transition-colors font-label-sm text-label-sm" type="button"><span class="text-outline font-normal">Scope:</span><span class="font-medium text-on-surface">All Synced Docs (4)</span><span class="material-symbols-outlined text-[16px] text-on-surface-variant">expand_more</span></button></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-low border border-outline-variant/30 text-on-surface-variant font-code-md text-label-sm"><span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span><span>text-embedding-3-small · GPT-4o</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><main class="relative pt-14 flex-1 bg-surface-container-lowest w-full"><div class="flex flex-col w-full">
+<!-- Subtle Horizon Glow for cognitive workspace -->
+<div class="relative w-full overflow-hidden px-space-lg lg:px-margin-desktop py-space-xl">
+<div class="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 w-[720px] h-[340px] rounded-full bg-gradient-to-b from-primary-container/10 via-secondary-container/5 to-transparent blur-3xl opacity-60"></div>
+<!-- Header Section -->
+<div class="relative z-10 flex flex-col gap-space-lg">
+<div class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs max-w-2xl">
+<div class="flex items-center gap-space-sm">
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Documents</h1>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-surface-container-high text-primary font-code-md text-label-sm shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container animate-pulse"></span>
+              4 documents indexed
+            </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant/80 leading-relaxed">
+            Uploaded files form the searchable ground-truth knowledge base. Chunks and dense vector embeddings remain isolated in your local execution environment.
+          </p>
+</div>
+<!-- Action Controls -->
+<div class="flex items-center gap-space-sm flex-wrap sm:flex-nowrap">
+<div class="relative w-full sm:w-72">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span>
+<input class="w-full bg-surface-container-low text-on-surface placeholder:text-outline font-body-sm text-body-sm pl-9 pr-3 py-2 rounded-lg outline-none focus:bg-surface-container transition-all shadow-inner" id="doc-search" placeholder="Filter corpus or tags (⌘K)..." type="text">
+</div>
+<button class="whitespace-nowrap px-4 py-2 rounded-lg bg-secondary-container text-on-surface hover:bg-on-secondary-fixed-variant transition-all font-label-md text-label-md flex items-center gap-2 shadow-md shadow-secondary-container/20 active:scale-95 cursor-pointer" id="upload-btn" type="button">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span>Upload documents</span>
+</button>
+</div>
+</div>
+<!-- Metrics Overview Strip (4 sleek dark summary cards) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">
+<!-- Metric 1: Knowledge Base -->
+<div class="p-space-md rounded-xl bg-surface-container-low shadow-sm flex flex-col justify-between gap-space-sm group hover:bg-surface-container transition-colors">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Knowledge Base</span>
+<div class="w-7 h-7 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[16px]">folder_special</span>
+</div>
+</div>
+<div>
+<div class="font-headline-md text-headline-md text-on-surface font-title-md flex items-baseline gap-2">
+              4 <span class="font-body-sm text-body-sm text-on-surface-variant font-normal">Files</span>
+</div>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="font-code-md text-label-sm text-on-surface-variant">12.4 MB allocated</span>
+<span class="text-outline text-xs">·</span>
+<span class="font-code-md text-label-sm text-primary">Single tenant</span>
+</div>
+</div>
+</div>
+<!-- Metric 2: Vector Embeddings -->
+<div class="p-space-md rounded-xl bg-surface-container-low shadow-sm flex flex-col justify-between gap-space-sm group hover:bg-surface-container transition-colors">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Vector Embeddings</span>
+<div class="w-7 h-7 rounded-lg bg-surface-container-high flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[16px]">scatter_plot</span>
+</div>
+</div>
+<div>
+<div class="font-headline-md text-headline-md text-on-surface font-title-md flex items-baseline gap-2">
+              412 <span class="font-body-sm text-body-sm text-on-surface-variant font-normal">Chunks</span>
+</div>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="font-code-md text-label-sm text-on-surface-variant">1536-dim</span>
+<span class="text-outline text-xs">·</span>
+<span class="font-code-md text-label-sm text-on-surface-variant">Cosine sim</span>
+</div>
+</div>
+</div>
+<!-- Metric 3: Model Target -->
+<div class="p-space-md rounded-xl bg-surface-container-low shadow-sm flex flex-col justify-between gap-space-sm group hover:bg-surface-container transition-colors">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Embedding Model</span>
+<div class="w-7 h-7 rounded-lg bg-surface-container-high flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[16px]">neurology</span>
+</div>
+</div>
+<div>
+<div class="font-title-md text-title-md text-on-surface truncate">
+              text-embedding-3
+            </div>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="font-code-md text-label-sm text-on-surface-variant">small tier</span>
+<span class="text-outline text-xs">·</span>
+<span class="font-code-md text-label-sm text-primary">Context: 8k</span>
+</div>
+</div>
+</div>
+<!-- Metric 4: Index Status -->
+<div class="p-space-md rounded-xl bg-surface-container-low shadow-sm flex flex-col justify-between gap-space-sm group hover:bg-surface-container transition-colors">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Index Pipeline</span>
+<div class="w-7 h-7 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+</div>
+</div>
+<div>
+<div class="font-headline-md text-headline-md text-on-surface font-title-md flex items-center gap-2">
+              100% <span class="font-label-sm text-label-sm text-primary bg-primary/10 px-1.5 py-0.5 rounded">Ready</span>
+</div>
+<div class="w-full bg-surface-container-high h-1.5 rounded-full mt-2 overflow-hidden">
+<div class="bg-primary-container h-full rounded-full w-full"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Corpus Telemetry / Inline Visual Anchor (Vector Distribution Sparkline) -->
+<div class="p-space-md rounded-xl bg-surface-container-low/70 flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[22px]">data_thresholding</span>
+</div>
+<div>
+<span class="font-title-md text-title-md text-on-surface block">Semantic Graph Latency</span>
+<span class="font-body-sm text-body-sm text-outline">Mean vector retrieval time: 14.2ms across local FAISS partition</span>
+</div>
+</div>
+<div class="flex items-center gap-space-lg">
+<div class="h-8 flex items-end gap-1.5 px-3 py-1 bg-surface-container rounded-lg">
+<div class="w-1.5 bg-primary/40 rounded-t h-3"></div>
+<div class="w-1.5 bg-primary/50 rounded-t h-5"></div>
+<div class="w-1.5 bg-primary-container rounded-t h-7"></div>
+<div class="w-1.5 bg-primary/60 rounded-t h-4"></div>
+<div class="w-1.5 bg-primary/80 rounded-t h-6"></div>
+<div class="w-1.5 bg-primary rounded-t h-5"></div>
+<div class="w-1.5 bg-primary-container rounded-t h-6"></div>
+</div>
+<div class="hidden sm:flex flex-col text-right">
+<span class="font-code-md text-label-sm text-on-surface">p99 = 22.8ms</span>
+<span class="font-label-sm text-label-sm text-outline">Zero quantization loss</span>
+</div>
+</div>
+</div>
+<!-- Documents Table Section -->
+<div class="bg-surface-container-low rounded-xl shadow-lg overflow-hidden flex flex-col">
+<div class="overflow-x-auto w-full">
+<table class="w-full text-left border-collapse" id="documents-table">
+<thead>
+<tr class="bg-surface-container-high/60 text-outline font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-3.5 px-6 font-semibold" scope="col">Filename</th>
+<th class="py-3.5 px-4 font-semibold" scope="col">Type</th>
+<th class="py-3.5 px-4 font-semibold" scope="col">Size</th>
+<th class="py-3.5 px-4 font-semibold" scope="col">Chunks</th>
+<th class="py-3.5 px-4 font-semibold" scope="col">Uploaded</th>
+<th class="py-3.5 px-6 font-semibold text-right" scope="col">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-none">
+<!-- Row 1: Security Compliance -->
+<tr class="group hover:bg-surface-container transition-colors" data-filename="Security_Compliance_2024.docx">
+<td class="py-4 px-6">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-primary group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">
+<span class="material-symbols-outlined text-[18px]">description</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-title-md text-title-md text-on-surface font-medium truncate">Security_Compliance_2024.docx</span>
+<span class="font-body-sm text-body-sm text-outline text-xs">SHA-256: 8f42…c91a · Verified internal policy</span>
+</div>
+</div>
+</td>
+<td class="py-4 px-4 whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-code-md text-label-sm">
+                    DOCX
+                  </span>
+</td>
+<td class="py-4 px-4 whitespace-nowrap font-code-md text-body-sm text-on-surface-variant">
+                  2.4 MB
+                </td>
+<td class="py-4 px-4 whitespace-nowrap">
+<div class="flex items-center gap-2">
+<span class="font-code-md text-body-sm text-on-surface">86 chunks</span>
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+</div>
+</td>
+<td class="py-4 px-4 whitespace-nowrap font-body-sm text-body-sm text-outline">
+                  Oct 18, 2024
+                </td>
+<td class="py-4 px-6 text-right whitespace-nowrap">
+<div class="inline-flex items-center gap-space-md">
+<button class="text-primary hover:text-primary-container font-label-md text-label-md font-medium transition-colors flex items-center gap-1 cursor-pointer" onclick="openSynthesizer('Security_Compliance_2024.docx')" type="button">
+<span class="material-symbols-outlined text-[16px]">chat</span>
+<span>Ask about this</span>
+</button>
+<button class="text-outline hover:text-error transition-colors p-1 rounded hover:bg-surface-container-high cursor-pointer" onclick="deleteRow(this)" title="Purge vector store partition" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2: API Integration Guide -->
+<tr class="group hover:bg-surface-container transition-colors" data-filename="API_Integration_Guide.txt">
+<td class="py-4 px-6">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-primary group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">
+<span class="material-symbols-outlined text-[18px]">text_snippet</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-title-md text-title-md text-on-surface font-medium truncate">API_Integration_Guide.txt</span>
+<span class="font-body-sm text-body-sm text-outline text-xs">REST v2.4 spec &amp; token limits</span>
+</div>
+</div>
+</td>
+<td class="py-4 px-4 whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-code-md text-label-sm">
+                    TXT
+                  </span>
+</td>
+<td class="py-4 px-4 whitespace-nowrap font-code-md text-body-sm text-on-surface-variant">
+                  1.1 MB
+                </td>
+<td class="py-4 px-4 whitespace-nowrap">
+<div class="flex items-center gap-2">
+<span class="font-code-md text-body-sm text-on-surface">38 chunks</span>
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+</div>
+</td>
+<td class="py-4 px-4 whitespace-nowrap font-body-sm text-body-sm text-outline">
+                  Oct 16, 2024
+                </td>
+<td class="py-4 px-6 text-right whitespace-nowrap">
+<div class="inline-flex items-center gap-space-md">
+<button class="text-primary hover:text-primary-container font-label-md text-label-md font-medium transition-colors flex items-center gap-1 cursor-pointer" onclick="openSynthesizer('API_Integration_Guide.txt')" type="button">
+<span class="material-symbols-outlined text-[16px]">chat</span>
+<span>Ask about this</span>
+</button>
+<button class="text-outline hover:text-error transition-colors p-1 rounded hover:bg-surface-container-high cursor-pointer" onclick="deleteRow(this)" title="Purge vector store partition" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3: Architecture Spec -->
+<tr class="group hover:bg-surface-container transition-colors" data-filename="Architecture_Spec_v2.md">
+<td class="py-4 px-6">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-primary group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">
+<span class="material-symbols-outlined text-[18px]">terminal</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-title-md text-title-md text-on-surface font-medium truncate">Architecture_Spec_v2.md</span>
+<span class="font-body-sm text-body-sm text-outline text-xs">Hydrated topology &amp; subgraphs</span>
+</div>
+</div>
+</td>
+<td class="py-4 px-4 whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-code-md text-label-sm">
+                    MD
+                  </span>
+</td>
+<td class="py-4 px-4 whitespace-nowrap font-code-md text-body-sm text-on-surface-variant">
+                  4.8 MB
+                </td>
+<td class="py-4 px-4 whitespace-nowrap">
+<div class="flex items-center gap-2">
+<span class="font-code-md text-body-sm text-on-surface">142 chunks</span>
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+</div>
+</td>
+<td class="py-4 px-4 whitespace-nowrap font-body-sm text-body-sm text-outline">
+                  Oct 15, 2024
+                </td>
+<td class="py-4 px-6 text-right whitespace-nowrap">
+<div class="inline-flex items-center gap-space-md">
+<button class="text-primary hover:text-primary-container font-label-md text-label-md font-medium transition-colors flex items-center gap-1 cursor-pointer" onclick="openSynthesizer('Architecture_Spec_v2.md')" type="button">
+<span class="material-symbols-outlined text-[16px]">chat</span>
+<span>Ask about this</span>
+</button>
+<button class="text-outline hover:text-error transition-colors p-1 rounded hover:bg-surface-container-high cursor-pointer" onclick="deleteRow(this)" title="Purge vector store partition" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4: Product Roadmap -->
+<tr class="group hover:bg-surface-container transition-colors" data-filename="Product_Roadmap_2025.pdf">
+<td class="py-4 px-6">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-primary group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">
+<span class="material-symbols-outlined text-[18px]">picture_as_pdf</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-title-md text-title-md text-on-surface font-medium truncate">Product_Roadmap_2025.pdf</span>
+<span class="font-body-sm text-body-sm text-outline text-xs">Strategic deliverables Q1-Q4</span>
+</div>
+</div>
+</td>
+<td class="py-4 px-4 whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-code-md text-label-sm">
+                    PDF
+                  </span>
+</td>
+<td class="py-4 px-4 whitespace-nowrap font-code-md text-body-sm text-on-surface-variant">
+                  4.1 MB
+                </td>
+<td class="py-4 px-4 whitespace-nowrap">
+<div class="flex items-center gap-2">
+<span class="font-code-md text-body-sm text-on-surface">146 chunks</span>
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+</div>
+</td>
+<td class="py-4 px-4 whitespace-nowrap font-body-sm text-body-sm text-outline">
+                  Oct 14, 2024
+                </td>
+<td class="py-4 px-6 text-right whitespace-nowrap">
+<div class="inline-flex items-center gap-space-md">
+<button class="text-primary hover:text-primary-container font-label-md text-label-md font-medium transition-colors flex items-center gap-1 cursor-pointer" onclick="openSynthesizer('Product_Roadmap_2025.pdf')" type="button">
+<span class="material-symbols-outlined text-[16px]">chat</span>
+<span>Ask about this</span>
+</button>
+<button class="text-outline hover:text-error transition-colors p-1 rounded hover:bg-surface-container-high cursor-pointer" onclick="deleteRow(this)" title="Purge vector store partition" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer / Controls -->
+<div class="bg-surface-container-high/40 px-6 py-3.5 flex flex-col sm:flex-row items-center justify-between gap-space-sm text-on-surface-variant">
+<div class="flex items-center gap-2 font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[16px] text-primary">storage</span>
+<span id="showing-text">Showing <strong class="text-on-surface font-medium">4</strong> of <strong class="text-on-surface font-medium">4</strong> indexed documents</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="px-3 py-1 rounded bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-colors font-label-sm text-label-sm flex items-center gap-1.5 cursor-pointer" onclick="reindexAll()" type="button">
+<span class="material-symbols-outlined text-[15px]">sync</span>
+<span>Re-index Corpus</span>
+</button>
+<button class="px-3 py-1 rounded bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-colors font-label-sm text-label-sm flex items-center gap-1.5 cursor-pointer" onclick="exportManifest()" type="button">
+<span class="material-symbols-outlined text-[15px]">download</span>
+<span>Export Manifest</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Secondary Info Block: RAG Chunking Parameters -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+<div class="p-space-md rounded-xl bg-surface-container-low shadow-sm flex items-start gap-space-sm">
+<div class="p-2 rounded bg-surface-container text-primary">
+<span class="material-symbols-outlined text-[20px]">splitscreen</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface font-medium">Chunk Splitting</span>
+<span class="font-body-sm text-body-sm text-outline mt-0.5">512 token recursive characters with 64 token overlap window.</span>
+</div>
+</div>
+<div class="p-space-md rounded-xl bg-surface-container-low shadow-sm flex items-start gap-space-sm">
+<div class="p-2 rounded bg-surface-container text-primary">
+<span class="material-symbols-outlined text-[20px]">security</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface font-medium">Encryption at Rest</span>
+<span class="font-body-sm text-body-sm text-outline mt-0.5">AES-256 local encrypted vector tables; keys never leave host memory.</span>
+</div>
+</div>
+<div class="p-space-md rounded-xl bg-surface-container-low shadow-sm flex items-start gap-space-sm">
+<div class="p-2 rounded bg-surface-container text-primary">
+<span class="material-symbols-outlined text-[20px]">filter_vintage</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface font-medium">Hybrid Search</span>
+<span class="font-body-sm text-body-sm text-outline mt-0.5">BM25 lexical scoring combined with dense vector rank reciprocal fusion.</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Interactive JavaScript for micro-interactions -->
+<script>
+    function openSynthesizer(filename) {
+      const notification = document.createElement('div');
+      notification.className = 'fixed bottom-6 right-6 z-50 bg-surface-container-high text-on-surface px-4 py-3 rounded-lg shadow-xl flex items-center gap-3 border-none';
+      notification.innerHTML = `
+        <span class="material-symbols-outlined text-primary-container text-[20px]">chat</span>
+        <span class="font-body-sm text-body-sm">Routing prompt query to scope: <strong class="text-on-surface font-code-md">` + filename + `</strong></span>
+      `;
+      document.body.appendChild(notification);
+      setTimeout(() => {
+        notification.style.opacity = '0';
+        notification.style.transition = 'opacity 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+      }, 2600);
+    }
+
+    function deleteRow(btn) {
+      const row = btn.closest('tr');
+      const filename = row.getAttribute('data-filename');
+      if (confirm(`Remove "${filename}" from vector index? Local embeddings will be purged.`)) {
+        row.style.opacity = '0';
+        row.style.transform = 'translateX(10px)';
+        row.style.transition = 'all 0.25s ease';
+        setTimeout(() => {
+          row.remove();
+          updateCount();
+        }, 250);
+      }
+    }
+
+    function updateCount() {
+      const rows = document.querySelectorAll('#documents-table tbody tr');
+      const textElem = document.getElementById('showing-text');
+      if (textElem) {
+        textElem.innerHTML = `Showing <strong class="text-on-surface font-medium">${rows.length}</strong> of <strong class="text-on-surface font-medium">${rows.length}</strong> indexed documents`;
+      }
+    }
+
+    function reindexAll() {
+      const btn = event.currentTarget;
+      const original = btn.innerHTML;
+      btn.innerHTML = `<span class="material-symbols-outlined text-[15px] animate-spin">refresh</span><span>Reindexing...</span>`;
+      setTimeout(() => {
+        btn.innerHTML = `<span class="material-symbols-outlined text-[15px] text-primary">done</span><span>Index Fresh</span>`;
+        setTimeout(() => { btn.innerHTML = original; }, 2000);
+      }, 1200);
+    }
+
+    function exportManifest() {
+      const manifest = {
+        exportedAt: new Date().toISOString(),
+        store: "iDoc Vector Partition 0",
+        documents: 4,
+        vectors: 412,
+        dimension: 1536
+      };
+      const blob = new Blob([JSON.stringify(manifest, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'idoc_manifest.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // Dynamic Filter
+    document.getElementById('doc-search')?.addEventListener('input', function(e) {
+      const query = e.target.value.toLowerCase();
+      const rows = document.querySelectorAll('#documents-table tbody tr');
+      let visible = 0;
+      rows.forEach(r => {
+        const text = r.innerText.toLowerCase();
+        if (text.includes(query)) {
+          r.style.display = '';
+          visible++;
+        } else {
+          r.style.display = 'none';
+        }
+      });
+      const textElem = document.getElementById('showing-text');
+      if (textElem) {
+        textElem.innerHTML = `Showing <strong class="text-on-surface font-medium">${visible}</strong> of <strong class="text-on-surface font-medium">${rows.length}</strong> indexed documents`;
+      }
+    });
+  </script>
+</div></main></div><div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" id="upload-modal-backdrop"><div class="w-full max-w-xl bg-[#121418] border border-[#292D34] rounded-xl shadow-2xl overflow-hidden flex flex-col text-on-surface animate-in fade-in zoom-in-95 duration-200"><div class="flex items-center justify-between px-6 py-4 border-b border-[#292D34] bg-[#191C21]/60"><div class="flex items-center gap-2.5"><div class="w-8 h-8 rounded-lg bg-primary-container/15 flex items-center justify-center text-primary-container"><span class="material-symbols-outlined text-[18px]">upload_file</span></div><div><h2 class="font-title-md text-title-md font-semibold text-on-surface">Upload documents</h2><p class="font-body-sm text-body-sm text-outline text-xs">Add documents to expand your vector ground truth</p></div></div><button class="text-outline hover:text-on-surface transition-colors p-1.5 rounded-lg hover:bg-surface-container-high cursor-pointer" onclick="document.getElementById('upload-modal-backdrop')?.remove()" type="button"><span class="material-symbols-outlined text-[20px]">close</span></button></div><div class="p-6 flex flex-col gap-4 overflow-y-auto max-h-[75vh]"><div class="border-2 border-dashed border-[#292D34] hover:border-primary-container/60 transition-colors rounded-xl p-6 bg-[#191C21]/40 flex flex-col items-center justify-center text-center group cursor-pointer"><div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center text-primary-container mb-3 group-hover:scale-105 transition-transform"><span class="material-symbols-outlined text-[26px]">cloud_upload</span></div><p class="font-title-md text-title-md font-medium text-on-surface">Drag &amp; drop files here, or <span class="text-primary-container underline underline-offset-4">browse files</span></p><p class="font-body-sm text-body-sm text-outline mt-1 text-xs">PDF, DOCX, TXT, MD • Max 20 MB per file</p></div><div class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg bg-surface-container-low border border-outline-variant/30 text-outline text-xs leading-normal"><span class="material-symbols-outlined text-[16px] text-primary-container shrink-0">info</span><span>Scanned PDFs require searchable text layers; OCR is not supported.</span></div><div class="flex flex-col gap-2.5 mt-1"><div class="flex items-center justify-between px-1"><span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Upload Queue (5)</span><span class="font-code-md text-xs text-on-surface-variant">Uploading sequentially: 1 active, 1 queued</span></div><div class="flex flex-col gap-2"><div class="flex items-center justify-between p-3 rounded-lg bg-[#191C21] border border-[#292D34]"><div class="flex items-center gap-3 min-w-0"><div class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-primary shrink-0"><span class="material-symbols-outlined text-[18px]">terminal</span></div><div class="flex flex-col min-w-0"><span class="font-title-md text-body-md font-medium text-on-surface truncate">API_Integration_Spec.md</span><span class="font-code-md text-xs text-outline">1.1 MB</span></div></div><div class="flex items-center gap-2 shrink-0"><span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 font-label-sm text-xs font-medium"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>Ready (86 chunks)</span></div></div><div class="flex items-center justify-between p-3 rounded-lg bg-[#191C21] border border-[#292D34]"><div class="flex items-center gap-3 min-w-0"><div class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-primary shrink-0"><span class="material-symbols-outlined text-[18px]">picture_as_pdf</span></div><div class="flex flex-col min-w-0"><span class="font-title-md text-body-md font-medium text-on-surface truncate">Product_Roadmap_2025.pdf</span><span class="font-code-md text-xs text-outline">3.8 MB</span></div></div><div class="flex items-center gap-2 shrink-0"><span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-primary-container/15 border border-primary-container/40 text-primary-container font-label-sm text-xs font-medium"><span class="material-symbols-outlined text-[13px] animate-spin">sync</span>Indexing chunks...</span></div></div><div class="flex items-center justify-between p-3 rounded-lg bg-[#191C21] border border-[#292D34]"><div class="flex items-center gap-3 min-w-0"><div class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-outline shrink-0"><span class="material-symbols-outlined text-[18px]">picture_as_pdf</span></div><div class="flex flex-col min-w-0"><span class="font-title-md text-body-md font-medium text-on-surface truncate">Q3_Financial_Review.pdf</span><span class="font-code-md text-xs text-outline">5.8 MB</span></div></div><div class="flex items-center gap-2 shrink-0"><span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-surface-container-high text-outline font-label-sm text-xs"><span class="w-1.5 h-1.5 rounded-full bg-outline"></span>Waiting in queue...</span></div></div><div class="flex items-center justify-between p-3 rounded-lg bg-[#191C21] border border-[#292D34]"><div class="flex items-center gap-3 min-w-0"><div class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-primary shrink-0"><span class="material-symbols-outlined text-[18px]">description</span></div><div class="flex flex-col min-w-0"><span class="font-title-md text-body-md font-medium text-on-surface truncate">Security_Compliance_2024.docx</span><span class="font-code-md text-xs text-outline">2.4 MB</span></div></div><div class="flex items-center gap-2 shrink-0"><span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-950/50 border border-amber-500/30 text-amber-300 font-label-sm text-xs font-medium"><span class="material-symbols-outlined text-[12px]">warning</span>Already indexed</span></div></div><div class="flex items-start justify-between p-3 rounded-lg bg-[#191C21] border border-rose-900/40 gap-3"><div class="flex items-start gap-3 min-w-0"><div class="w-8 h-8 rounded-lg bg-rose-950/60 border border-rose-800/40 flex items-center justify-center text-rose-400 shrink-0 mt-0.5"><span class="material-symbols-outlined text-[18px]">error_outline</span></div><div class="flex flex-col min-w-0"><div class="flex items-center gap-2"><span class="font-title-md text-body-md font-medium text-on-surface truncate">Corrupted_Telemetry_Dump.bin</span><span class="font-code-md text-xs text-outline">14.2 MB</span></div><span class="font-body-sm text-xs text-rose-300/90 mt-0.5">Unsupported format (.bin). Supported: PDF, DOCX, TXT, MD</span></div></div><div class="flex items-center gap-1.5 shrink-0"><button class="px-2.5 py-1 rounded bg-primary-container/20 hover:bg-primary-container/30 text-primary-container border border-primary-container/40 font-label-sm text-xs transition-colors flex items-center gap-1 cursor-pointer" type="button"><span class="material-symbols-outlined text-[13px]">refresh</span>Retry</button></div></div></div></div></div><div class="px-6 py-4 border-t border-[#292D34] bg-[#191C21]/60 flex items-center justify-between"><span class="font-body-sm text-xs text-outline">Uploading sequentially: 1 active, 1 queued</span><div class="flex items-center gap-2.5"><button class="px-4 py-2 rounded-lg bg-secondary-container text-on-surface hover:bg-on-secondary-fixed-variant transition-all font-label-md text-label-md shadow-md shadow-secondary-container/20 cursor-pointer font-medium" onclick="document.getElementById('upload-modal-backdrop')?.remove()" type="button">Done</button></div></div></div></div>
+
+</body></html>

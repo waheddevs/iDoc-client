@@ -93,6 +93,7 @@ test('preview document upload, search, selection, chat sources and delete', asyn
     ),
   ).toBe('none');
   await page.setViewportSize({ width: 390, height: 844 });
+  await expect(page.getByRole('dialog', { name: 'Sources' })).toHaveCSS('width', '390px');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
   await page.screenshot({ path: 'artifacts/screenshots/chat-sources-mobile.png', fullPage: true });
   await page.setViewportSize({ width: 1280, height: 720 });

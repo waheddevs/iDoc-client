@@ -33,6 +33,8 @@
   display: flex;
   align-items: center;
   height: 76px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border);
   margin-bottom: 16px;
   padding-left: 10px;
 }
@@ -233,4 +235,10 @@ a.account:hover,
   .profileHeader {
     display: none;
   }
+}
+
+.sidebar > nav,
+.sidebar > button,
+.sidebarBottom {
+  flex-shrink: 0;
 }

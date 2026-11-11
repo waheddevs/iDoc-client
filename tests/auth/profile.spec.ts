@@ -255,6 +255,82 @@ test('Google-only profile shows the right security controls and returns to dashb
   await expect(page.getByRole('heading', { name: 'Password managed by Google' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Update password' })).toHaveCount(0);
   await expect(page.getByText('Connected', { exact: true })).toBeVisible();
-  await page.getByRole('link', { name: 'Back to workspace' }).click();
+  await page.getByRole('link', { name: 'Chat', exact: true }).click();
   await expect(page).toHaveURL(origin + '/chat');
+});
+
+test('profile layout is wide, compact and notifications dismiss without shifting forms', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await signup(page);
+  await expect(page.getByText('Your account', { exact: true })).toHaveCount(0);
+  await expect(page.getByRole('link', { name: 'Back to workspace' })).toHaveCount(0);
+  await expect(page.locator('header').getByText('Profile', { exact: true })).toHaveCount(0);
+  const heading = page.getByRole('heading', { name: 'Profile & settings' });
+  await expect(heading.locator('..')).toHaveCSS('text-align', 'left');
+  expect((await heading.boundingBox())!.y).toBeLessThan(50);
+  const card = page.getByRole('region', { name: 'Personal details' });
+  expect((await card.boundingBox())!.width).toBeGreaterThan(1100);
+  const brand = page.locator('aside').getByRole('link', { name: 'iDoc home' });
+  await expect(brand).toHaveCSS('border-bottom-width', '1px');
+  await page.getByLabel('Display name').fill('Notification reader');
+  const before = await card.boundingBox();
+  await page.getByRole('button', { name: 'Save changes' }).click();
+  const notices = page.getByRole('region', { name: 'Notifications', exact: true });
+  const success = notices.getByRole('status');
+  await expect(success).toHaveText('Your profile has been updated.');
+  expect(await card.boundingBox()).toEqual(before);
+  const box = (await notices.boundingBox())!;
+  expect(box.x + box.width).toBeGreaterThan(1400);
+  expect(box.y).toBeLessThan(30);
+  await page.screenshot({ path: 'artifacts/screenshots/profile-notification.png' });
+  await notices.getByRole('button', { name: 'Dismiss notification' }).click();
+  await expect(success).toHaveCount(0);
+
+  await page.clock.install();
+  await page.getByRole('button', { name: 'Save changes' }).click();
+  await expect(success).toBeVisible();
+  await success.hover();
+  await page.clock.fastForward(10000);
+  await expect(success).toBeVisible();
+  await page.mouse.move(400, 650);
+  await notices.getByRole('button').focus();
+  await page.clock.fastForward(10000);
+  await expect(success).toBeVisible();
+  await page.getByLabel('Display name').focus();
+  await page.clock.fastForward(6100);
+  await expect(success).toHaveCount(0);
+});
+
+test('notifications fit mobile, respect reduced motion and cap repeated messages', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await signup(page);
+  await page.clock.install();
+  const notices = page.getByRole('region', { name: 'Notifications', exact: true });
+  for (let i = 0; i < 4; i++) {
+    await page.getByLabel('Choose profile photo').setInputFiles({
+      name: 'photo.svg',
+      mimeType: 'image/svg+xml',
+      buffer: Buffer.from('<svg/>'),
+    });
+    await expect(notices.getByRole('alert')).toHaveCount(Math.min(i + 1, 3));
+  }
+  const toast = notices.locator('[data-tone]').first();
+  await expect(toast).toHaveCSS('animation-name', 'none');
+  const box = (await notices.boundingBox())!;
+  expect(box.x).toBeGreaterThanOrEqual(0);
+  expect(box.x + box.width).toBeLessThanOrEqual(390);
+  await page.screenshot({ path: 'artifacts/screenshots/profile-notification-mobile.png' });
+  await page.clock.fastForward(8100);
+  await expect(notices.getByRole('alert')).toHaveCount(0);
+  await page
+    .getByLabel('Choose profile photo')
+    .setInputFiles({ name: 'photo.svg', mimeType: 'image/svg+xml', buffer: Buffer.from('<svg/>') });
+  await expect(notices.getByRole('alert')).toBeVisible();
+  await page.evaluate(() => window.dispatchEvent(new Event('idoc:signing-out')));
+  await expect(notices.getByRole('alert')).toHaveCount(0);
 });

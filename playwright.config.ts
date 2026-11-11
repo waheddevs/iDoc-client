@@ -19,6 +19,11 @@ export default defineConfig({
     url: 'http://localhost:3100',
     reuseExistingServer: !process.env.CI,
     timeout: 120000,
-    env: { BACKEND_AUTH_ENABLED: 'false', APP_ORIGIN: 'http://localhost:3100' },
+    env: {
+      IDOC_TEST_BUILD: 'true',
+      BACKEND_AUTH_ENABLED: 'false',
+      LOCAL_WORKSPACE_ENABLED: 'false',
+      APP_ORIGIN: 'http://localhost:3100',
+    },
   },
 });

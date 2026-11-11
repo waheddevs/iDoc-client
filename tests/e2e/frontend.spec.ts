@@ -26,7 +26,7 @@ test('landing links, FAQ, logo and favicon', async ({ page }) => {
 test('login validates fields, toggles password and never fabricates sign-in', async ({ page }) => {
   await page.goto('/login');
   await page.getByRole('button', { name: 'Sign in', exact: true }).click();
-  await expect(page.getByText('Enter a valid email address.')).toBeVisible();
+  await expect(page.getByText('Enter your email address.')).toBeVisible();
   await expect(page.getByText('Enter your password.')).toBeVisible();
   await page.getByLabel('Email address').fill('reader@example.com');
   await page.getByLabel('Password', { exact: true }).fill('test-password');
@@ -62,7 +62,7 @@ test('preview document upload, search, selection, chat sources and delete', asyn
   await page.goto('/preview/documents');
   await expect(page.getByText('Demo preview', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Upload documents', exact: true }).click();
-  await page.getByLabel('Choose documents').setInputFiles({
+  await page.getByLabel('Choose documents', { exact: true }).setInputFiles({
     name: 'test-notes.md',
     mimeType: 'text/markdown',
     buffer: Buffer.from('# Example test notes'),
@@ -75,26 +75,28 @@ test('preview document upload, search, selection, chat sources and delete', asyn
     .getByRole('link', { name: 'Ask about test-notes.md' })
     .filter({ visible: true })
     .click();
-  await expect(page.getByRole('button', { name: /Scope: 1 selected/ })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Choose documents: test-notes.md' })).toBeVisible();
   await page.getByLabel('Ask a question').fill('What is in this document?');
   await page.getByRole('button', { name: 'Send question' }).click();
   await expect(
     page.getByText('this is a frontend preview, not an AI-generated response.', { exact: false }),
   ).toBeVisible();
-  await page.getByRole('button', { name: /S1\s+test-notes\.md/ }).click();
+  await page.getByRole('button', { name: /View sources/ }).click();
   await expect(page.getByRole('dialog', { name: 'Sources' })).toBeVisible();
   await expect(
     page.getByText('Example passage: Upload your documents', { exact: false }),
   ).toBeVisible();
   await page.screenshot({ path: 'artifacts/screenshots/chat-active-sources.png', fullPage: true });
   expect(
-    await page.getByRole('dialog', { name: 'Sources' }).evaluate((dialog) =>
-      getComputedStyle(dialog, '::backdrop').backdropFilter,
-    ),
+    await page
+      .getByRole('dialog', { name: 'Sources' })
+      .evaluate((dialog) => getComputedStyle(dialog, '::backdrop').backdropFilter),
   ).toBe('none');
   await page.setViewportSize({ width: 390, height: 844 });
   await expect(page.getByRole('dialog', { name: 'Sources' })).toHaveCSS('width', '390px');
-  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
+  expect(
+    await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth),
+  ).toBeTruthy();
   await page.screenshot({ path: 'artifacts/screenshots/chat-sources-mobile.png', fullPage: true });
   await page.setViewportSize({ width: 1280, height: 720 });
   await page.keyboard.press('Escape');
@@ -106,7 +108,7 @@ test('preview document upload, search, selection, chat sources and delete', asyn
   await page.getByRole('button', { name: 'Delete document', exact: true }).click();
   await expect(page.getByText('test-notes.md', { exact: true })).toHaveCount(0);
   await page.getByRole('link', { name: 'Chat', exact: true }).click();
-  await page.getByRole('button', { name: /S1\s+test-notes\.md/ }).click();
+  await page.getByRole('button', { name: /View sources/ }).click();
   await expect(page.getByText('Document removed · this is a saved excerpt.')).toBeVisible();
 });
 test('new chat confirmation, keyboard behavior and preview cleanup', async ({ page }) => {
@@ -119,7 +121,7 @@ test('new chat confirmation, keyboard behavior and preview cleanup', async ({ pa
   await page.getByRole('button', { name: 'New chat', exact: true }).click();
   await expect(page.getByRole('dialog', { name: 'Start a new chat?' })).toBeVisible();
   await page.getByRole('button', { name: 'Start new chat', exact: true }).click();
-  await expect(page.getByRole('heading', { name: 'Your documents. Clear answers.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'What would you like to know?' })).toBeVisible();
   await page.getByRole('button', { name: 'Leave preview' }).click();
   await expect(page).toHaveURL(/\/login$/);
   await page.goto('/preview/chat');
@@ -129,7 +131,7 @@ test('upload validation and modal focus', async ({ page }) => {
   await page.goto('/preview/documents');
   const trigger = page.getByRole('button', { name: 'Upload documents', exact: true });
   await trigger.click();
-  await page.getByLabel('Choose documents').setInputFiles({
+  await page.getByLabel('Choose documents', { exact: true }).setInputFiles({
     name: 'unsafe.exe',
     mimeType: 'application/octet-stream',
     buffer: Buffer.from('example'),
@@ -159,6 +161,7 @@ test('empty library state after deleting example documents', async ({ page }) =>
   await expect(page.getByRole('button', { name: 'Send question' })).toBeDisabled();
 });
 test('responsive layouts, mobile navigation and screenshots', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   for (const width of [1440, 1024, 768, 390]) {

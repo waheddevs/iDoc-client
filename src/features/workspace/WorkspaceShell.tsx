@@ -22,6 +22,7 @@ import { UploadDialog } from '@/features/documents/UploadDialog';
 import { WorkspaceDrawers } from './WorkspaceDrawers';
 import { signOut } from '@/features/auth/api';
 import styles from './WorkspaceShell.module.scss';
+import { ConversationHistory } from '@/features/chat/ConversationHistory';
 import { GoogleLinkNotice } from '@/features/auth/GoogleLinkNotice';
 export function WorkspaceShell({ children }: { children: React.ReactNode }) {
   const w = useWorkspace();
@@ -82,6 +83,7 @@ export function WorkspaceShell({ children }: { children: React.ReactNode }) {
           Documents
         </Link>
       </nav>
+      <ConversationHistory onNavigate={() => setMobile(false)} />
       <div className={styles.sidebarBottom}>
         {!w.preview && !w.local ? (
           <Link

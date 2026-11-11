@@ -1,0 +1,111 @@
+.history {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  margin: 16px 0;
+  scrollbar-width: thin;
+  h2 {
+    margin: 0 10px 10px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 500;
+  }
+  p,
+  > div {
+    margin: 10px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  p {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 4px;
+  }
+  li {
+    position: relative;
+    min-width: 0;
+    border-radius: 10px;
+  }
+  li > a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 62px 10px 10px;
+    border-radius: 10px;
+    font-size: 12px;
+    color: var(--muted);
+    transition:
+      background-color 220ms ease,
+      color 220ms ease;
+  }
+  li > a svg {
+    flex-shrink: 0;
+  }
+  li > a span {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  li > a:hover,
+  li > a[aria-current] {
+    background: var(--elevated);
+    color: var(--text);
+  }
+}
+.actions {
+  position: absolute;
+  top: 50%;
+  right: 3px;
+  transform: translateY(-50%);
+  display: flex;
+  button {
+    display: grid;
+    place-items: center;
+    padding: 0;
+    min-height: 28px;
+    height: 28px;
+    width: 27px;
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    border-radius: 8px;
+  }
+  button:hover:not(:disabled) {
+    color: var(--text);
+    background: #ffffff0a;
+  }
+}
+.rename {
+  display: grid;
+  gap: 20px;
+  label {
+    display: grid;
+    gap: 8px;
+    font-size: 13px;
+  }
+  input {
+    width: 100%;
+  }
+  p {
+    margin: 0;
+    color: #ffb4ab;
+    font-size: 12px;
+  }
+  > div {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+}
+@media (max-width: 767px) {
+  .history {
+    max-height: 35dvh;
+  }
+}

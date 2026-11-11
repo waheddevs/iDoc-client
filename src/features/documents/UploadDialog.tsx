@@ -174,7 +174,7 @@ export function UploadDialog() {
         </>
       )}
       <div className={styles.dialogActions}>
-        <button className="primary" disabled={busy} onClick={() => w.setUploadOpen(false)}>
+        <button className={styles.primary} disabled={busy} onClick={() => w.setUploadOpen(false)}>
           {busy ? 'Processing…' : 'Done'}
         </button>
       </div>

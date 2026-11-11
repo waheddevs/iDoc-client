@@ -14,6 +14,8 @@ import {
 } from 'lucide-react';
 import { Logo } from '@/components/brand/Logo';
 import styles from './Landing.module.scss';
+import { LandingMotion } from './LandingMotion';
+import { DocumentScene } from './DocumentScene';
 const features = [
   {
     icon: FileText,
@@ -51,13 +53,13 @@ const faqs = [
   ],
   [
     'Are conversations saved?',
-    'Your current conversation stays in memory for the active workspace session. Refreshing the page clears it. Uploaded documents are managed by the connected backend.',
+    'Conversations are currently kept for your active workspace session. Starting a new chat or refreshing clears the current conversation. Your uploaded documents remain in your library.',
   ],
 ];
 export function Landing() {
   return (
-    <div className={styles.page}>
-      <nav className={styles.nav} aria-label="Main navigation">
+    <LandingMotion className={styles.page}>
+      <nav data-reveal="down" className={styles.nav} aria-label="Main navigation">
         <Link href="/" aria-label="iDoc home">
           <Logo />
         </Link>
@@ -66,28 +68,26 @@ export function Landing() {
           <a href="#features">Features</a>
           <a href="#faq">FAQ</a>
         </div>
-        <Link href="/login" className="button">
-          Sign in <ArrowUpRight size={15} />
-        </Link>
+        <Link href="/login" className="button">Sign in <ArrowUpRight size={15} /></Link>
       </nav>
       <main id="main">
         <section className={styles.hero}>
           <div className={styles.glow} />
           <div className={styles.heroCopy}>
-            <span className={styles.badge}>
+            <span data-reveal="down" className={styles.badge}>
               <i />
               YOUR DOCUMENT WORKSPACE
             </span>
-            <h1>
+            <h1 data-reveal="focus" data-delay="80">
               Your documents.
               <br />
               <span>Clear answers.</span>
             </h1>
-            <p>
+            <p data-reveal="rise" data-delay="160">
               Turn the information you already have into the answers you need. Ask, explore, and
               follow every insight back to its source.
             </p>
-            <div className={styles.heroActions}>
+            <div data-reveal="rise" data-delay="240" className={styles.heroActions}>
               <Link className="button primary" href="/chat">
                 Open workspace <ArrowRight size={17} />
               </Link>
@@ -95,49 +95,23 @@ export function Landing() {
                 See how it works
               </a>
             </div>
-            <Link href="/preview/chat" className={styles.previewLink}>
+            <Link
+              href="/preview/chat"
+              className={styles.previewLink}
+              data-reveal="left"
+              data-delay="320"
+            >
               Explore frontend preview <ArrowUpRight size={14} />
             </Link>
           </div>
-          <div className={styles.documentScene} aria-hidden="true">
-            <div className={styles.orbit} />
-            <div className={styles.backDoc}>
-              <FileText size={28} />
-              <span />
-              <span />
-              <span />
-              <small>RESEARCH NOTES</small>
-            </div>
-            <div className={styles.frontDoc}>
-              <div>
-                <FileText size={25} />
-                <small>KNOWLEDGE, CONNECTED</small>
-              </div>
-              <h3>
-                From information
-                <br />
-                to understanding.
-              </h3>
-              <span />
-              <span />
-              <span className={styles.highlight} />
-              <span />
-              <div className={styles.docBottom}>
-                <span>DOCUMENT WORKSPACE</span>
-                <BookOpen size={22} />
-              </div>
-            </div>
-            <div className={styles.sourceChip}>
-              <Quote size={17} />
-              <span>Answers with sources</span>
-              <ArrowUpRight size={16} />
-            </div>
-          </div>
+          <DocumentScene />
         </section>
         <ProductPreview />
         <section className={styles.section} id="how-it-works">
-          <span className="eyebrow">A simpler way to find answers</span>
-          <h2>
+          <span data-reveal="down" className="eyebrow">
+            A simpler way to find answers
+          </span>
+          <h2 data-reveal="focus" data-delay="80">
             From document to insight.
             <br />
             <span>In three steps.</span>
@@ -160,7 +134,11 @@ export function Landing() {
                 text: 'Inspect the supporting passage. See exactly where the information came from.',
               },
             ].map((step, i) => (
-              <article key={step.title}>
+              <article
+                key={step.title}
+                data-reveal={['left', 'rise', 'right'][i]}
+                data-delay={i * 90}
+              >
                 <div>
                   <step.icon size={22} />
                   <span>0{i + 1}</span>
@@ -172,15 +150,21 @@ export function Landing() {
           </div>
         </section>
         <section className={styles.section} id="features">
-          <span className="eyebrow">Built for focused work</span>
-          <h2>
+          <span data-reveal="down" className="eyebrow">
+            Built for focused work
+          </span>
+          <h2 data-reveal="focus" data-delay="80">
             Less searching.
             <br />
             <span>More understanding.</span>
           </h2>
           <div className={styles.features}>
-            {features.map((feature) => (
-              <article key={feature.title}>
+            {features.map((feature, i) => (
+              <article
+                key={feature.title}
+                data-reveal={['expand', 'card', 'left', 'right'][i]}
+                data-delay={i * 80}
+              >
                 <feature.icon size={23} />
                 <h3>{feature.title}</h3>
                 <p>{feature.text}</p>
@@ -189,9 +173,11 @@ export function Landing() {
           </div>
         </section>
         <section className={`${styles.section} ${styles.spotlight}`}>
-          <div>
-            <span className="eyebrow">Context you can inspect</span>
-            <h2>
+          <div data-reveal="left">
+            <span data-reveal="down" className="eyebrow">
+              Context you can inspect
+            </span>
+            <h2 data-reveal="focus" data-delay="80">
               An answer is just
               <br />
               the beginning.
@@ -204,7 +190,7 @@ export function Landing() {
               Explore the workspace <ArrowRight size={16} />
             </Link>
           </div>
-          <article className={styles.sourceExample}>
+          <article data-reveal="right" data-delay="120" className={styles.sourceExample}>
             <header>
               <BookOpen size={18} />
               Source inspector <span>EXAMPLE</span>
@@ -212,7 +198,7 @@ export function Landing() {
             <div>
               <small className="eyebrow">S1 · Example passage</small>
               <h3>Workspace_Guide.pdf</h3>
-              <blockquote>
+              <blockquote data-reveal="line" data-delay="240">
                 “Upload your documents, ask a question, then inspect the original source.”
               </blockquote>
               <p>
@@ -224,12 +210,16 @@ export function Landing() {
         </section>
         <section className={`${styles.section} ${styles.faq}`} id="faq">
           <div>
-            <span className="eyebrow">A few useful answers</span>
-            <h2>Before you begin.</h2>
+            <span data-reveal="down" className="eyebrow">
+              A few useful answers
+            </span>
+            <h2 data-reveal="focus" data-delay="80">
+              Before you begin.
+            </h2>
           </div>
           <div>
-            {faqs.map(([question, answer]) => (
-              <details key={question}>
+            {faqs.map(([question, answer], i) => (
+              <details key={question} data-reveal="right" data-delay={i * 70}>
                 <summary>
                   {question}
                   <ChevronDown size={17} />
@@ -239,9 +229,11 @@ export function Landing() {
             ))}
           </div>
         </section>
-        <section className={styles.finalCta}>
-          <span className="eyebrow">Make room for understanding</span>
-          <h2>
+        <section data-reveal="glow" className={styles.finalCta}>
+          <span data-reveal="down" className="eyebrow">
+            Make room for understanding
+          </span>
+          <h2 data-reveal="focus" data-delay="80">
             Your next answer
             <br />
             is in your documents.
@@ -251,7 +243,7 @@ export function Landing() {
           </Link>
         </section>
       </main>
-      <footer className={styles.footer}>
+      <footer data-reveal="rise" className={styles.footer}>
         <Link href="/" aria-label="iDoc home">
           <Logo />
         </Link>
@@ -260,13 +252,17 @@ export function Landing() {
           Sign in <ArrowUpRight size={14} />
         </Link>
       </footer>
-    </div>
+    </LandingMotion>
   );
 }
 function ProductPreview() {
   return (
-    <section className={styles.product} aria-label="Illustrative product preview">
-      <div className={styles.productHeader}>
+    <section
+      data-reveal="card"
+      className={styles.product}
+      aria-label="Illustrative product preview"
+    >
+      <div data-reveal="down" data-delay="80" className={styles.productHeader}>
         <span>
           <i />
           Inside your workspace
@@ -274,7 +270,7 @@ function ProductPreview() {
         <span>ILLUSTRATIVE EXAMPLE</span>
       </div>
       <div className={styles.productBody}>
-        <aside>
+        <aside data-reveal="left" data-delay="100">
           <Logo />
           <span>
             <MessageSquare size={15} />
@@ -286,8 +282,10 @@ function ProductPreview() {
           </span>
         </aside>
         <div className={styles.productChat}>
-          <div className={styles.productQuestion}>How do I find the source behind an answer?</div>
-          <div className={styles.exampleAnswer}>
+          <div data-reveal="rise" data-delay="160" className={styles.productQuestion}>
+            How do I find the source behind an answer?
+          </div>
+          <div data-reveal="rise" data-delay="260" className={styles.exampleAnswer}>
             <span className="accent">
               <MessageSquare size={18} />
             </span>
@@ -299,16 +297,18 @@ function ProductPreview() {
               <span className={styles.sourceTag}>S1 · Workspace_Guide.pdf</span>
             </div>
           </div>
-          <div className={styles.exampleInput}>
+          <div data-reveal="line" data-delay="360" className={styles.exampleInput}>
             <Search size={15} />
             Ask your documents…
             <ArrowRight size={16} />
           </div>
         </div>
-        <div className={styles.productSource}>
-          <span className="eyebrow">Source · S1</span>
+        <div data-reveal="right" data-delay="300" className={styles.productSource}>
+          <span data-reveal="down" className="eyebrow">
+            Source · S1
+          </span>
           <h3>Workspace_Guide.pdf</h3>
-          <blockquote>
+          <blockquote data-reveal="line" data-delay="240">
             Inspect the original source to verify the details behind an answer.
           </blockquote>
           <small>Example content</small>

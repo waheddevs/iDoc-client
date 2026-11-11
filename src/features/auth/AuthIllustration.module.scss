@@ -1,0 +1,26 @@
+.illustration {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  isolation: isolate;
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  &[data-animated='true'] img {
+    visibility: hidden;
+  }
+}
+@media (max-width: 900px) {
+  .illustration {
+    display: none;
+  }
+}

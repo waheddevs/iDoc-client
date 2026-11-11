@@ -105,6 +105,24 @@
     0 0 90px #ff6b2b13,
     inset 0 0 50px #ff6b2b08;
 }
+.orbitLight {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+  &::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ffb59a;
+    box-shadow: 0 0 18px 5px #ff6b2b66;
+  }
+}
 .backDoc,
 .frontDoc {
   position: absolute;
@@ -662,3 +680,5 @@
     }
   }
 }
+
+.profileLink { display:flex; align-items:center; gap:10px; max-width:200px; font-size:13px; span:last-child { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; } }

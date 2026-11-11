@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { Logo } from '@/components/brand/Logo';
+import { AuthIllustration } from './AuthIllustration';
 import styles from './LoginForm.module.scss';
 
 export function AuthShell({ children }: { children: ReactNode }) {
@@ -17,6 +18,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
       </header>
       <main id="main" className={styles.formPanel}>
         <div className={styles.composition}>
+          <AuthIllustration />
           <section className={styles.formContainer} aria-label="Account access">
             {children}
           </section>

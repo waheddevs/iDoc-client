@@ -12,6 +12,7 @@ export function Dialog({
   confirmation = false,
   icon,
   describedBy,
+  className = '',
 }: {
   title: string;
   children: React.ReactNode;
@@ -22,6 +23,7 @@ export function Dialog({
   confirmation?: boolean;
   icon?: React.ReactNode;
   describedBy?: string;
+  className?: string;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   const id = useId();
@@ -41,7 +43,7 @@ export function Dialog({
       aria-labelledby={id}
       aria-describedby={describedBy}
       aria-busy={busy || undefined}
-      className={`${styles.dialog} ${drawer ? styles.drawer : ''} ${readingPanel ? styles.readingPanel : ''} ${confirmation ? styles.confirmation : ''}`}
+      className={`${styles.dialog} ${drawer ? styles.drawer : ''} ${readingPanel ? styles.readingPanel : ''} ${confirmation ? styles.confirmation : ''} ${className}`}
       onCancel={(e) => {
         e.preventDefault();
         if (!busy) onClose();

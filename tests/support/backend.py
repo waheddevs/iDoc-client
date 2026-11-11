@@ -49,5 +49,11 @@ with tempfile.TemporaryDirectory(prefix='idoc-e2e-') as directory:
         app = create_app(settings)
     else:
         from tests.fakes import TestEmbedding, TestLLM
-        app = create_app(settings, llm=TestLLM(), embedding=TestEmbedding())
+        class BrowserTestLLM(TestLLM):
+            def chat(self, messages, **kwargs):
+                if any("E2E_SLOW_CHAT" in message.content for message in messages):
+                    import time
+                    time.sleep(3)
+                return super().chat(messages, **kwargs)
+        app = create_app(settings, llm=BrowserTestLLM(), embedding=TestEmbedding())
     uvicorn.run(app, host='127.0.0.1', port=args.port)

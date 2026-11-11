@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import type { Conversation, Completion } from '../../src/lib/api/types';
 
 // Explicit browser API fixtures for pending, missing-answer and grouped-source UI states.
 test('simplified chat handles document selection, processing and retrieved passages', async ({
@@ -20,34 +21,67 @@ test('simplified chat handles document selection, processing and retrieved passa
   await page.route('**/api/backend/v1/documents', (route) =>
     route.fulfill({ json: { documents: docs, total: docs.length } }),
   );
+  const conversation: Conversation = {
+    id: 'a'.repeat(32),
+    title: 'New chat',
+    revision: 0,
+    created_at: 1,
+    updated_at: 1,
+    pending: false,
+    error: null,
+    messages: [],
+    document_ids: null,
+  };
+  let created = false;
+  await page.route('**/api/backend/v1/conversations', (route) => {
+    if (route.request().method() === 'POST') {
+      created = true;
+      return route.fulfill({ status: 201, json: conversation });
+    }
+    return route.fulfill({ json: { conversations: created ? [conversation] : [] } });
+  });
+  await page.route('**/api/backend/v1/conversations/' + conversation.id, (route) =>
+    route.fulfill({ json: conversation }),
+  );
   let releaseAnswer!: () => void;
   const answerGate = new Promise<void>((resolve) => {
     releaseAnswer = resolve;
   });
   await page.route('**/api/backend/v1/chat/completions', async (route) => {
-    expect(route.request().postDataJSON().document_ids).toEqual(['ui-doc']);
+    const body = route.request().postDataJSON();
+    expect(body.document_ids).toEqual(['ui-doc']);
+    expect(body.conversation_id).toBe(conversation.id);
+    conversation.messages = body.messages;
+    conversation.document_ids = body.document_ids;
+    conversation.pending = true;
+    conversation.revision = 1;
     await answerGate;
-    await route.fulfill({
-      json: {
-        choices: [
-          {
-            message: {
-              role: 'assistant',
-              content: 'Available documents do not provide enough information.',
-            },
+    const completion: Completion = {
+      choices: [
+        {
+          message: {
+            role: 'assistant',
+            content: 'Available documents do not provide enough information.',
           },
-        ],
-        sources: [1, 2].map((index) => ({
-          source_id: 'S' + index,
-          document_id: 'ui-doc',
-          file_name: fileName,
-          page_label: '1',
-          chunk_index: index - 1,
-          text: 'Retrieved test passage ' + index,
-          score: null,
-        })),
-      },
+        },
+      ],
+      sources: [1, 2].map((index) => ({
+        source_id: 'S' + index,
+        document_id: 'ui-doc',
+        file_name: fileName,
+        page_label: '1',
+        chunk_index: index - 1,
+        text: 'Retrieved test passage ' + index,
+        score: null,
+      })),
+    };
+    conversation.messages.push({
+      ...completion.choices[0].message,
+      sources: completion.sources || [],
     });
+    conversation.pending = false;
+    conversation.revision = 2;
+    await route.fulfill({ json: completion });
   });
   await page.goto('/chat');
   const picker = page.getByRole('button', { name: 'Choose documents: All documents' });
@@ -111,13 +145,11 @@ test('simplified chat handles document selection, processing and retrieved passa
     await route.fulfill({ status: 201, json: { document_id: 'upload-ui', status: 'success' } });
   });
   await page.getByRole('button', { name: 'Upload documents', exact: true }).click();
-  await page
-    .getByLabel('Choose documents', { exact: true })
-    .setInputFiles({
-      name: 'new-notes.txt',
-      mimeType: 'text/plain',
-      buffer: Buffer.from('Explicit UI fixture'),
-    });
+  await page.getByLabel('Choose documents', { exact: true }).setInputFiles({
+    name: 'new-notes.txt',
+    mimeType: 'text/plain',
+    buffer: Buffer.from('Explicit UI fixture'),
+  });
   await expect(page.getByText('Processing', { exact: true })).toBeVisible();
   await expect(page.getByRole('button', { name: /Processing/ })).toBeDisabled();
   releaseUpload();

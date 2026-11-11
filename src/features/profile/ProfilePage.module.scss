@@ -1,3 +1,5 @@
+@use '../../styles/controls';
+
 .page {
   width: 100%;
   margin: 0 auto;
@@ -36,14 +38,7 @@
     margin: 0;
   }
   button {
-    border-radius: 999px;
-    min-height: 42px;
-    font-size: 12px;
-    padding: 10px 16px;
-    transition:
-      background-color 240ms ease,
-      border-color 240ms ease,
-      color 240ms ease;
+    @include controls.button;
   }
   input {
     width: 100%;
@@ -138,13 +133,7 @@
   }
 }
 .card .primary {
-  background: var(--action);
-  color: white;
-  border-color: #f16b3040;
-  &:hover:not(:disabled) {
-    background: #a7380b;
-    border-color: #f16b3070;
-  }
+  @include controls.primary-button;
 }
 .connection {
   display: flex;

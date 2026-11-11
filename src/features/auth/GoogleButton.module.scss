@@ -1,0 +1,45 @@
+.group {
+  width: 100%;
+}
+.linkNotice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+  background: #12231b;
+  color: #c7f2d8;
+  font-size: 12px;
+  button {
+    flex-shrink: 0;
+  }
+}
+.button {
+  width: 100%;
+  min-height: 46px;
+  padding: 11px 12px;
+  border: 1px solid #8e918f;
+  border-radius: 8px;
+  background: #131314;
+  color: #e3e3e3;
+  font-weight: 500;
+  font-size: 14px;
+  gap: 10px;
+  svg {
+    flex-shrink: 0;
+  }
+}
+.hint,
+.error {
+  margin: 8px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.hint {
+  color: var(--muted);
+  text-align: center;
+}
+.error {
+  color: #ffabb6;
+}

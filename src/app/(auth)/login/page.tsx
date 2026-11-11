@@ -1,27 +1,19 @@
-import Link from 'next/link';
-import { Logo } from '@/components/brand/Logo';
+import { AuthShell } from '@/features/auth/AuthShell';
 import { LoginForm } from '@/features/auth/LoginForm';
 import { authEnabled } from '@/lib/server/backend';
-import styles from '@/features/auth/LoginForm.module.scss';
+import { canonicalizeAuthOrigin } from '@/lib/auth/auth-origin.server';
 export const metadata = { title: 'Sign in' };
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ next?: string }>;
+  searchParams: Promise<{ next?: string; google_error?: string }>;
 }) {
   const params = await searchParams;
-  const returnTo = ['/chat', '/documents'].includes(params.next || '') ? params.next! : '/chat';
+  const returnTo = ['/chat', '/documents', '/profile'].includes(params.next || '') ? params.next! : '/chat';
+  await canonicalizeAuthOrigin('/login', returnTo, params.google_error);
   return (
-    <div className={styles.page}>
-      <nav className={styles.nav}>
-        <Link href="/" aria-label="iDoc home">
-          <Logo />
-        </Link>
-        <Link href="/">Back to home</Link>
-      </nav>
-      <main id="main">
-        <LoginForm enabled={authEnabled()} returnTo={returnTo} />
-      </main>
-    </div>
+    <AuthShell>
+      <LoginForm enabled={authEnabled()} returnTo={returnTo} googleError={params.google_error} />
+    </AuthShell>
   );
 }

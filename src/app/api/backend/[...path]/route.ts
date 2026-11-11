@@ -15,6 +15,7 @@ const rules: Record<string, string[]> = {
   'v1/profile/avatar': ['GET', 'POST', 'DELETE'],
   'v1/profile/password': ['POST'],
   'v1/profile/sessions/revoke': ['POST'],
+  'v1/conversations': ['GET', 'POST'],
   health: ['GET'],
   ready: ['GET'],
   'v1/config': ['GET'],
@@ -34,7 +35,10 @@ function fail(status: number, message: string, code = 'proxy_error') {
 }
 async function handler(request: NextRequest, context: { params: Promise<{ path: string[] }> }) {
   const path = (await context.params).path.join('/');
-  const allowed = rules[path] ?? (/^v1\/documents\/[a-zA-Z0-9_-]+$/.test(path) ? ['DELETE'] : []);
+  const allowed =
+    rules[path] ??
+    (/^v1\/conversations\/[a-f0-9]{32}$/.test(path) ? ['GET', 'PATCH', 'DELETE'] : undefined) ??
+    (/^v1\/documents\/[a-zA-Z0-9_-]+$/.test(path) ? ['DELETE'] : []);
   if (!allowed.includes(request.method)) return fail(404, 'This operation is not available.');
   const local = localWorkspaceEnabled();
   if (local && !localHostAllowed(request.headers.get('host')))
@@ -76,7 +80,12 @@ async function handler(request: NextRequest, context: { params: Promise<{ path: 
     if (cookie) headers.set('cookie', cookie);
     const type = request.headers.get('content-type');
     if (type) headers.set('content-type', type);
-    const max = path === 'v1/ingest/file' ? 20 * 1024 * 1024 + 65536 : path === 'v1/profile/avatar' ? 5 * 1024 * 1024 + 65536 : 65536;
+    const max =
+      path === 'v1/ingest/file'
+        ? 20 * 1024 * 1024 + 65536
+        : path === 'v1/profile/avatar'
+          ? 5 * 1024 * 1024 + 65536
+          : 65536;
     if (Number(request.headers.get('content-length') || 0) > max)
       return fail(413, 'The request is too large.');
     let body: Uint8Array | undefined;
@@ -111,15 +120,29 @@ async function handler(request: NextRequest, context: { params: Promise<{ path: 
     if (response.status >= 300 && response.status < 400)
       return fail(502, 'The service returned an unexpected response.');
     if (path === 'v1/profile/avatar' && request.method === 'GET' && response.ok) {
-      if (!response.headers.get('content-type')?.startsWith('image/png')) return fail(502, 'Invalid image response.');
-      return new NextResponse(await response.arrayBuffer(), { headers: { 'Content-Type': 'image/png', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' } });
+      if (!response.headers.get('content-type')?.startsWith('image/png'))
+        return fail(502, 'Invalid image response.');
+      return new NextResponse(await response.arrayBuffer(), {
+        headers: {
+          'Content-Type': 'image/png',
+          'Cache-Control': 'no-store',
+          'X-Content-Type-Options': 'nosniff',
+        },
+      });
     }
     const data = await response.json().catch(() => null);
     if (!data) return fail(502, 'The service returned an invalid response.');
     const fieldErrors: Record<string, string> = {};
     if ((isAuth || path.startsWith('v1/profile')) && [400, 409, 422].includes(response.status)) {
       const fields = data.error?.details?.field_errors;
-      for (const field of ['email', 'password', 'name', 'current_password', 'new_password', 'confirm_password']) {
+      for (const field of [
+        'email',
+        'password',
+        'name',
+        'current_password',
+        'new_password',
+        'confirm_password',
+      ]) {
         if (typeof fields?.[field] === 'string') fieldErrors[field] = fields[field].slice(0, 250);
       }
     }

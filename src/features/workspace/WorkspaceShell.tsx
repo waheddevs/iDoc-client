@@ -55,7 +55,7 @@ export function WorkspaceShell({ children }: { children: React.ReactNode }) {
     <>
       <button
         className={styles.newChat}
-        onClick={() => (w.messages.length ? setConfirm(true) : newChat())}
+        onClick={() => (w.preview && w.messages.length ? setConfirm(true) : newChat())}
       >
         <Plus size={17} />
         New chat
@@ -65,7 +65,7 @@ export function WorkspaceShell({ children }: { children: React.ReactNode }) {
           pathname.endsWith('/documents') ||
           pathname.endsWith('/profile')) && (
           <Link
-            href={`${w.base}/chat`}
+            href={w.activeId ? `/chat?conversation=${w.activeId}` : `${w.base}/chat`}
             onClick={() => setMobile(false)}
             aria-current={pathname.endsWith('/chat') ? 'page' : undefined}
           >
@@ -164,7 +164,7 @@ export function WorkspaceShell({ children }: { children: React.ReactNode }) {
           <button
             className={styles.mobileNewChat}
             aria-label="New chat"
-            onClick={() => (w.messages.length ? setConfirm(true) : newChat())}
+            onClick={() => (w.preview && w.messages.length ? setConfirm(true) : newChat())}
           >
             <Plus size={20} />
           </button>

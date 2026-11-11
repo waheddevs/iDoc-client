@@ -36,3 +36,16 @@ export type Completion = {
 };
 
 export type Profile = { user: User; has_password: boolean; google_connected: boolean; created_at: number };
+export type ConversationSummary = {
+  id: string;
+  title: string;
+  revision: number;
+  created_at: number;
+  updated_at: number;
+  pending: boolean;
+  error: string | null;
+};
+export type Conversation = ConversationSummary & {
+  messages: Message[];
+  document_ids: string[] | null;
+};

@@ -42,7 +42,10 @@ export function DocumentLibrary() {
           title="Ask about this document"
           aria-label={`Ask about ${doc.file_name}`}
           href={`${w.base}/chat`}
-          onClick={() => w.setSelected([doc.document_id])}
+          onClick={() => {
+            w.clear();
+            w.setSelected([doc.document_id]);
+          }}
         >
           <MessageSquare size={16} />
           <span>Ask about this</span>

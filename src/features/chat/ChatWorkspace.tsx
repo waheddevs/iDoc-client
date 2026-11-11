@@ -3,59 +3,41 @@ import { useEffect, useRef, useState } from 'react';
 import { Sparkles, FileText, RotateCcw, Copy, Check, ChevronRight, Upload } from 'lucide-react';
 import { Spinner } from '@/components/ui/Spinner';
 import { useWorkspace } from '@/features/workspace/WorkspaceContext';
-import type { Message } from '@/lib/api/types';
 import { MessageContent } from './MessageContent';
 import { ChatComposer } from './ChatComposer';
 import { isInsufficientAnswer } from './source-utils';
 import styles from './ChatWorkspace.module.scss';
-export function ChatWorkspace() {
+export function ChatWorkspace({ conversationId = null }: { conversationId?: string | null }) {
   const w = useWorkspace();
   const [question, setQuestion] = useState('');
-  const { pending, setPending, chatError: error, setChatError: setError } = w;
+  const { pending, chatError: error, setChatError: setError, openConversation } = w;
+  useEffect(() => {
+    let cancelled = false;
+    // Route selection also handles browser back/forward and direct saved-chat links.
+    void Promise.resolve().then(() => {
+      if (!cancelled) void openConversation(conversationId);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [conversationId, openConversation]);
   const [copied, setCopied] = useState<number | null>(null);
   const [focusVersion, setFocusVersion] = useState(0);
-  const lock = useRef(false);
   const threadEnd = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (w.messages.length) threadEnd.current?.scrollIntoView({ block: 'end', behavior: 'instant' });
   }, [w.messages.length, pending]);
   const ready = w.docs.filter((d) => d.status === 'ready');
   const send = async (retry = false) => {
-    if (lock.current || pending || !ready.length || (!retry && !question.trim())) return;
+    if (pending || !ready.length || (!retry && !question.trim())) return;
     if (w.scopeInvalid) {
       setError('A selected document is no longer ready. Choose available documents before asking.');
       w.setScopeOpen(true);
       return;
     }
-    const history: Message[] = retry
-      ? w.messages
-      : [...w.messages, { role: 'user', content: question.trim() }];
-    if (history.length > 32 || history.reduce((n, m) => n + m.content.length, 0) > 24000) {
-      setError('This conversation has reached its limit. Start a new chat to continue.');
-      return;
-    }
-    const version = w.conversationVersion.current;
-    lock.current = true;
-    setPending(true);
-    setError('');
-    if (!retry) {
-      w.setMessages(history);
-      setQuestion('');
-    }
-    try {
-      const result = await w.answer(history);
-      if (version !== w.conversationVersion.current) return;
-      const content = result.choices[0]?.message.content;
-      if (!content)
-        throw new Error('No supporting answer was returned. Try a more specific question.');
-      w.setMessages([...history, { role: 'assistant', content, sources: result.sources || [] }]);
-    } catch (e) {
-      if (version === w.conversationVersion.current)
-        setError(e instanceof Error ? e.message : 'The answer could not be completed.');
-    } finally {
-      lock.current = false;
-      if (version === w.conversationVersion.current) setPending(false);
-    }
+    const text = question.trim();
+    setQuestion('');
+    if (!(await w.sendMessage(text, retry)) && !retry) setQuestion(text);
   };
   const prompt = (text: string) => {
     setQuestion(text);
@@ -71,6 +53,24 @@ export function ChatWorkspace() {
       focusVersion={focusVersion}
     />
   );
+  if (!w.preview && (w.historyLoading || conversationId !== w.activeId))
+    return (
+      <div className={styles.welcome}>
+        <p className={styles.pending} role="status">
+          <Spinner size={20} />
+          Loading your chat...
+        </p>
+      </div>
+    );
+  if (w.historyError)
+    return (
+      <div className={styles.welcome}>
+        <div className="notice" role="alert">
+          {w.historyError}
+          <button onClick={() => void w.openConversation(conversationId, true)}>Reload chat</button>
+        </div>
+      </div>
+    );
   return (
     <div className={styles.chat}>
       {!w.messages.length ? (
@@ -168,9 +168,7 @@ export function ChatWorkspace() {
                       {!!message.sources?.length && (
                         <button className={styles.citation} onClick={() => w.openSources(message)}>
                           <FileText size={16} />
-                          {isInsufficientAnswer(message.content)
-                            ? 'Retrieved passages'
-                            : 'View sources'}
+                          {isInsufficientAnswer(message.content) ? 'Retrieved passages' : 'View sources'}
                           <span>
                             · {message.sources.length}{' '}
                             {message.sources.length === 1 ? 'passage' : 'passages'}

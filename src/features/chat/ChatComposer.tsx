@@ -119,7 +119,11 @@ export function ChatComposer({ question, onChange, onSend, focusVersion }: Props
         </div>
       </div>
       <p className={styles.sessionNote}>
-        Chats are not saved. Refreshing clears this conversation.
+        {w.preview
+          ? 'Preview chats stay in this browser session.'
+          : w.local
+            ? 'Chats are saved in this local workspace.'
+            : 'Chats are saved to your account.'}
       </p>
     </div>
   );

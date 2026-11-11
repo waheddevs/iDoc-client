@@ -55,7 +55,7 @@ const faqs = [
   ],
   [
     'Are conversations saved?',
-    'Conversations are currently kept for your active workspace session. Starting a new chat or refreshing clears the current conversation. Your uploaded documents remain in your library.',
+    'Yes. Questions, answers, and source excerpts are saved automatically in your workspace. Reopen previous conversations from Your chats in the sidebar. The frontend preview uses temporary example chats.',
   ],
 ];
 export function Landing({ user = null }: { user?: User | null }) {

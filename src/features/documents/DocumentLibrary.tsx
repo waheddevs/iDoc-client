@@ -10,7 +10,7 @@ import {
   MessageSquare,
   RefreshCw,
 } from 'lucide-react';
-import { Dialog } from '@/components/ui/Dialog';
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { useWorkspace } from '@/features/workspace/WorkspaceContext';
 import type { Doc } from '@/lib/api/types';
 import { formatSize } from '@/lib/api/client';
@@ -194,29 +194,17 @@ export function DocumentLibrary() {
         </>
       )}
       {deleting && (
-        <Dialog title="Delete document" onClose={() => setDeleting(null)} busy={busy}>
-          <div className={styles.deleteIcon}>
-            <Trash2 size={28} />
-          </div>
-          <h3>Remove this document?</h3>
-          <p>
-            <strong>{deleting.file_name}</strong> will be removed from your library and future
-            answers. Existing conversation excerpts will remain.
-          </p>
-          {error && (
-            <p role="alert" className="notice">
-              {error}
-            </p>
-          )}
-          <div className={styles.dialogActions}>
-            <button disabled={busy} onClick={() => setDeleting(null)}>
-              Cancel
-            </button>
-            <button disabled={busy} className="primary" onClick={remove}>
-              {busy ? 'Deleting…' : 'Delete document'}
-            </button>
-          </div>
-        </Dialog>
+        <ConfirmDialog
+          title="Delete document"
+          description="This document will be removed from your library and future answers. Existing conversation excerpts will remain."
+          subject={deleting.file_name}
+          confirmLabel="Delete document"
+          pendingLabel="Deleting..."
+          busy={busy}
+          error={error}
+          onClose={() => setDeleting(null)}
+          onConfirm={remove}
+        />
       )}
     </div>
   );

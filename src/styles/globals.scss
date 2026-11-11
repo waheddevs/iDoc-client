@@ -156,12 +156,26 @@ svg {
   color: #ffb59a;
 }
 .notice {
-  border: 1px solid #6d3b2d;
-  border-radius: 8px;
-  background: #261811;
-  color: #ffd7c7;
-  padding: 14px 16px;
+  border: 1px solid #ffb59a20;
+  border-radius: 14px;
+  background: #ffb59a06;
+  color: #e8c6b8;
+  padding: 13px 16px;
   margin: 16px 0;
+  font-size: 13px;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+  &[role='alert'] {
+    border-color: #ffb4ab25;
+    background: #ffb4ab08;
+    color: #ffc2bb;
+  }
+  button {
+    border-radius: 999px;
+    transition:
+      background-color 240ms ease,
+      border-color 240ms ease;
+  }
 }
 .error {
   color: #ffb4ab;

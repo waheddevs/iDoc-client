@@ -16,6 +16,7 @@ import {
 import { Logo } from '@/components/brand/Logo';
 import { Avatar } from '@/components/ui/Avatar';
 import { Dialog } from '@/components/ui/Dialog';
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { useWorkspace } from './WorkspaceContext';
 import { UploadDialog } from '@/features/documents/UploadDialog';
 import { WorkspaceDrawers } from './WorkspaceDrawers';
@@ -193,15 +194,15 @@ export function WorkspaceShell({ children }: { children: React.ReactNode }) {
         </Dialog>
       )}
       {confirm && (
-        <Dialog title="Start a new chat?" onClose={() => setConfirm(false)}>
-          <p>Your current conversation and source excerpts will be cleared.</p>
-          <div className={styles.actions}>
-            <button onClick={() => setConfirm(false)}>Keep conversation</button>
-            <button className="primary" onClick={newChat}>
-              Start new chat
-            </button>
-          </div>
-        </Dialog>
+        <ConfirmDialog
+          title="Start a new chat?"
+          icon={<MessageSquare size={21} strokeWidth={1.7} />}
+          description="Your current conversation and source excerpts will be cleared."
+          confirmLabel="Start new chat"
+          cancelLabel="Keep conversation"
+          onClose={() => setConfirm(false)}
+          onConfirm={newChat}
+        />
       )}
       {w.uploadOpen && <UploadDialog />}
       <WorkspaceDrawers />

@@ -118,4 +118,4 @@ Profiles support display-name editing, JPG/PNG/WebP photo upload and removal, pa
 
 Forms validate before submission and display backend field errors separately. Profile updates persist in the backend and appear in both the sidebar and landing navigation. Password changes revoke other sessions while retaining the current one.
 
-Chat history is still kept in memory for the active workspace session. The unfinished persistent-history implementation is intentionally excluded from this release.
+Chats save automatically to the backend SQLite conversation store, scoped to the signed-in account (or the explicit local workspace). Questions are written before answer generation; completed answers retain their source excerpts and document selection. Refreshing a saved-chat URL restores it, and New chat preserves previous conversations under Your chats. Rename/delete controls are in the sidebar. The frontend preview remains temporary.

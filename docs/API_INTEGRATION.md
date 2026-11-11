@@ -93,3 +93,26 @@ All routes below require the existing account session and are forwarded through 
 | /v1/profile/sessions/revoke | POST | Revokes other sessions while retaining the current cookie session. |
 
 The adapter maps name/current_password/new_password/confirm_password errors to fieldErrors. Google-only accounts have no local password. Profile is a protected workspace route; local unauthenticated mode redirects /profile to /chat. Approved authentication return destinations include /chat, /documents and /profile.
+
+
+## Saved conversations
+
+Chats are automatically stored in the backend data directory in conversations.sqlite. The existing session identifies their owner; local mode uses the shared local owner. Browser storage is not used for private messages.
+
+- GET/POST /v1/conversations: list the owner's chats / create an empty chat.
+- GET/PATCH/DELETE /v1/conversations/{id}: read, rename with {title}, or delete an owned chat. Unknown or foreign IDs return 404.
+- POST /v1/chat/completions accepts conversation_id and conversation_revision together. The client sends the latest question; the server builds context from the stored messages, saves the question before inference and saves the answer plus sources afterwards.
+- Concurrent/stale writes return 409. Failed questions remain retryable without duplicates. Interrupted pending operations expire after four minutes; an obsolete answer cannot overwrite a newer revision.
+- /chat?conversation={id} restores messages, scope and pending/error state. New chat opens a fresh draft without deleting saved history. An empty draft is created on the server only when the first question is sent.
+- The sidebar lists, renames and explicitly deletes chats. Document deletion preserves the previously saved source excerpts. Demo preview chats remain temporary.
+
+
+## Document summaries and answer metadata
+
+The backend detects explicit summary requests (including English, Uzbek and Korean cues). A summary with an implicit all-document scope and multiple ready files returns `summary_selection_required`; the client opens the picker. Explicit combined summaries support up to five documents.
+
+Completion responses and saved assistant messages now include `mode` (question/summary), `answer_status` (answered/insufficient_evidence/unverified), and optional `coverage` with total_chunks, reviewed_chunks, partial and basis=indexed_text. The UI uses these fields rather than guessing status from prose; older saved messages retain a text fallback. Status describes model abstention/citation availability, not factual accuracy verification.
+
+Summary coverage is bounded to 32 passages across up to four section passes plus synthesis, under configured context limits. Large documents receive a clearly marked partial overview, not a claim that every page was read. Sources retain original document IDs, chunk indices and page labels. Ordinary questions continue using scoped semantic retrieval.
+
+New PDF uploads return/store total_pages and text_pages. Upload and picker views explain partial extraction. Existing documents may have null counts (no automatic re-upload or reindex); scanned/image-only content still requires external OCR.

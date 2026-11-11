@@ -102,3 +102,25 @@ Account and document flows use real FastAPI/SQLite storage with isolated test da
 Cold-start verification exposed a logout/session-expiry race and a test clicking the workspace before account hydration. Logout intent now survives provider remounts; auth tests wait for the verified profile identity before workspace actions. The complete suites above passed after those fixes.
 
 Verified profile navigation, persistent names and normalized photo upload/removal, owner isolation, frontend-first and backend field validation, password changes, other-session revocation, safe confirmation focus, and layouts at 1440/1024/768/390 pixels. Chat history remains session-only in this release. Local credentials, databases, generated caches, debug reports and unfinished history code are excluded from the commits.
+
+
+## Automatic saved chats (2026-11-11)
+
+- Auth/profile regression suite: 20 passed. The final conversation suite: 4 passed, covering refresh, saved scope and excerpts, New chat, logout/login, another browser, rename/delete, owner isolation, pending refresh, concurrent navigation and a lost HTTP response without a duplicate answer.
+- Backend API/history suite after the final model-unavailable fix: 32 passed. Covers durable SQLite reopen, authoritative server history, owner/origin checks, failed-question retry, atomic concurrent writes, revision conflicts, expired pending recovery, late-answer rejection and bounded history. The existing Pydantic metadata warning remains.
+- Preview/frontend regression: 8 passed. Local backend integration: 7 passed. The explicit chat UI fixture now implements the saved-conversation response contract.
+- TypeScript, ESLint and isolated production build passed. Browser screenshots checked at desktop and mobile sizes under artifacts/screenshots/saved-chats-*.png.
+- Account/session/storage tests use real FastAPI and isolated SQLite/Chroma data. Model outputs and Google exchange are explicit test providers; no production user documents or accounts are modified.
+- Live development backend already runs with reload and exposes the conversation endpoints. No credential changes are required.
+
+
+## Document picker and summary pipeline - 2026-11-11
+
+- Redesigned document picker checked at 1440, 1024, 768 and 390 px; checkbox boxes remain 20x20 px regardless of filename wrapping. Search, draft cancellation, apply, focus restoration, no matches and extraction warnings tested. Screenshots: artifacts/screenshots/document-picker-{width}.png.
+- Backend full suite: 97 passed. Follow-up summary suite after source-ID propagation changes: 16 passed. Providers in these tests are deterministic test doubles; ingestion, Chroma, SQLite, ownership and persistence are real and isolated.
+- Browser integration suite: 8 passed. Authenticated conversation suite: 4 passed (refresh, pending answers, logout/login, another browser, ownership, retry and New chat). Browser provider responses are explicitly test-only; UI status fixture verifies nonstandard prose still follows answer_status.
+- TypeScript, ESLint, isolated production build and git diff whitespace checks passed.
+- Real configured Ollama (llama3.2 + nomic-embed-text): short document without an abstract produced grounded key points and [S1]; final reusable smoke test passed for section synthesis and Korean text with citations, names and date checks. Earlier iterations exposed dropped citations and confusion between text batches and project phases; prompt/provenance fixes resolved these fixtures. This is a small smoke corpus, not a general model-quality guarantee.
+- Read-only inspection of existing PDFs found 1/1 and 663/709 pages with extractable text (2 and 670 indexed chunks respectively). No uploaded source text was copied to artifacts, and existing user documents were not changed.
+- Limitations: summaries review at most 32 passages across four section calls plus synthesis (up to five explicitly selected documents). Larger inputs show partial coverage. Scanned pages require external OCR. Page extraction counts are available for new uploads; legacy rows may remain null.
+- Backend live OpenAPI exposes mode, answer_status and coverage. Full API contract regenerated. No commit or push performed for this change.

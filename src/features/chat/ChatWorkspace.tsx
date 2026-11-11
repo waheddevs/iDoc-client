@@ -1,36 +1,32 @@
 'use client';
-import { useRef, useState } from 'react';
-import Link from 'next/link';
-import { MessageContent } from './MessageContent';
-import {
-  ArrowUp,
-  Paperclip,
-  ChevronDown,
-  Sparkles,
-  ListChecks,
-  Scale,
-  FileText,
-  ArrowRight,
-  BookOpen,
-  RotateCcw,
-  Copy,
-  Check,
-  LoaderCircle,
-} from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Sparkles, FileText, RotateCcw, Copy, Check, ChevronRight, Upload } from 'lucide-react';
+import { Spinner } from '@/components/ui/Spinner';
 import { useWorkspace } from '@/features/workspace/WorkspaceContext';
 import type { Message } from '@/lib/api/types';
-import { formatSize } from '@/lib/api/client';
+import { MessageContent } from './MessageContent';
+import { ChatComposer } from './ChatComposer';
+import { isInsufficientAnswer } from './source-utils';
 import styles from './ChatWorkspace.module.scss';
 export function ChatWorkspace() {
   const w = useWorkspace();
   const [question, setQuestion] = useState('');
   const { pending, setPending, chatError: error, setChatError: setError } = w;
   const [copied, setCopied] = useState<number | null>(null);
-  const textarea = useRef<HTMLTextAreaElement>(null);
+  const [focusVersion, setFocusVersion] = useState(0);
   const lock = useRef(false);
+  const threadEnd = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (w.messages.length) threadEnd.current?.scrollIntoView({ block: 'end', behavior: 'instant' });
+  }, [w.messages.length, pending]);
   const ready = w.docs.filter((d) => d.status === 'ready');
   const send = async (retry = false) => {
     if (lock.current || pending || !ready.length || (!retry && !question.trim())) return;
+    if (w.scopeInvalid) {
+      setError('A selected document is no longer ready. Choose available documents before asking.');
+      w.setScopeOpen(true);
+      return;
+    }
     const history: Message[] = retry
       ? w.messages
       : [...w.messages, { role: 'user', content: question.trim() }];
@@ -63,210 +59,134 @@ export function ChatWorkspace() {
   };
   const prompt = (text: string) => {
     setQuestion(text);
-    textarea.current?.focus();
+    setFocusVersion((v) => v + 1);
   };
+  const loading = !w.preview && w.documentsQuery.isPending;
+  const failed = !w.preview && w.documentsQuery.isError;
   const composer = (
-    <div className={styles.composer}>
-      <label className="srOnly" htmlFor="question">
-        Ask a question
-      </label>
-      <textarea
-        ref={textarea}
-        id="question"
-        placeholder={
-          ready.length ? 'What would you like to know?' : 'Upload a document to get started…'
-        }
-        value={question}
-        maxLength={8000}
-        disabled={pending}
-        onChange={(e) => setQuestion(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
-            e.preventDefault();
-            if (!error) void send();
-          }
-        }}
-      />
-      <div className={styles.composerBottom}>
-        <button className={styles.scope} onClick={() => w.setScopeOpen(true)}>
-          <BookOpen size={15} />
-          <span>
-            {w.selectedIds.length
-              ? `${w.selectedIds.length} selected`
-              : `All documents (${ready.length})`}
-          </span>
-          <ChevronDown size={13} />
-        </button>
-        <div>
-          <button
-            className={styles.attach}
-            aria-label="Upload documents"
-            onClick={() => w.setUploadOpen(true)}
-          >
-            <Paperclip size={18} />
-          </button>
-          <button
-            className={`primary ${styles.send}`}
-            aria-label="Send question"
-            disabled={!question.trim() || pending || !ready.length || !!error}
-            onClick={() => void send()}
-          >
-            {pending ? <LoaderCircle size={20} /> : <ArrowUp size={20} />}
-          </button>
-        </div>
-      </div>
-    </div>
+    <ChatComposer
+      question={question}
+      onChange={setQuestion}
+      onSend={() => void send()}
+      focusVersion={focusVersion}
+    />
   );
   return (
-    <div className={`${styles.chat} ${w.messages.length ? styles.active : ''}`}>
+    <div className={styles.chat}>
       {!w.messages.length ? (
         <div className={styles.welcome}>
-          <div className={styles.horizon} />
-          <span className={styles.badge}>
-            <i />
-            YOUR DOCUMENT WORKSPACE
-          </span>
+          <div className={styles.welcomeIcon}>
+            <FileText size={26} />
+          </div>
           <h1>
-            Your documents.
-            <br className={styles.mobileBreak} />
-            <span> Clear answers.</span>
+            {loading || failed
+              ? 'Your document workspace'
+              : ready.length
+                ? 'What would you like to know?'
+                : 'Start with a document'}
           </h1>
           <p className={styles.intro}>
-            Ask questions, uncover insights, and trace
-            <br className={styles.desktopBreak} /> every answer back to its source.
+            {ready.length
+              ? 'Ask a question. Find answers in your files.'
+              : 'Upload a PDF, Word document, or text file to start chatting.'}
           </p>
-          {composer}
-          <div className={styles.prompts}>
-            <button onClick={() => prompt('Summarize the key points in this document.')}>
-              <Sparkles size={17} />
-              Summarize a document
-            </button>
-            <button onClick={() => prompt('What are the key requirements?')}>
-              <ListChecks size={17} />
-              Find key requirements
-            </button>
-            <button onClick={() => prompt('Compare the main ideas across these documents.')}>
-              <Scale size={17} />
-              Compare information
-            </button>
-          </div>
-          <section className={styles.corpus}>
-            <div className={styles.corpusTitle}>
-              <span className="eyebrow">
-                <i />
-                Active documents ({ready.length})
-              </span>
-              <Link href={`${w.base}/documents`}>
-                Manage <ArrowRight size={14} />
-              </Link>
+          {loading ? (
+            <p className={styles.pending} role="status">
+              <Spinner size={20} />
+              Loading your documents...
+            </p>
+          ) : failed ? (
+            <div className="notice" role="alert">
+              Could not load documents. <button onClick={() => void w.refresh()}>Try again</button>
             </div>
-            {!w.preview && w.documentsQuery.isError ? (
-              <div className="notice" role="alert">
-                Could not load documents.{' '}
-                <button onClick={() => void w.refresh()}>Try again</button>
-              </div>
-            ) : !w.preview && w.documentsQuery.isPending ? (
-              <p role="status">Loading documents…</p>
-            ) : ready.length ? (
-              <div className={styles.corpusGrid}>
-                {ready.slice(0, 4).map((doc) => (
-                  <button
-                    key={doc.document_id}
-                    onClick={() => w.setSelected([doc.document_id])}
-                    aria-pressed={w.selectedIds.includes(doc.document_id)}
-                  >
-                    <FileText size={21} />
-                    <strong>{doc.file_name}</strong>
-                    <small>
-                      <span>{w.preview ? 'Example' : `${doc.num_chunks} chunks`}</span>
-                      <span>{formatSize(doc.size_bytes)}</span>
-                    </small>
-                  </button>
-                ))}
-              </div>
-            ) : (
-              <div className={styles.empty}>
-                <FileText size={23} />
-                <span>Your knowledge base is ready for its first document.</span>
-                <button onClick={() => w.setUploadOpen(true)}>
-                  Upload a document <ArrowRight size={14} />
-                </button>
-              </div>
-            )}
-          </section>
-          <div className={styles.footer}>
-            <BookOpen size={14} />
-            <span>Answers with original source passages</span>
-            <span className={styles.footerDivider}>·</span>
-            <span>{w.preview ? 'Example workspace' : `${ready.length} documents ready`}</span>
-          </div>
+          ) : (
+            !ready.length && (
+              <button
+                className={'primary ' + styles.uploadCta}
+                onClick={() => w.setUploadOpen(true)}
+              >
+                <Upload size={18} />
+                Upload a document
+              </button>
+            )
+          )}
+          {composer}
+          {ready.length > 0 && (
+            <div className={styles.prompts}>
+              <button onClick={() => prompt('Summarize the key points in this document.')}>
+                Summarize a document
+              </button>
+              <button onClick={() => prompt('What are the key requirements?')}>
+                Find key requirements
+              </button>
+              <button onClick={() => prompt('Compare the main ideas across these documents.')}>
+                Compare documents
+              </button>
+            </div>
+          )}
         </div>
       ) : (
         <>
           <div className={styles.thread}>
-            <div className={styles.sessionLabel}>
-              CURRENT CONVERSATION <span>Session only</span>
-            </div>
             {w.messages.map((message, index) => (
               <article
                 key={index}
                 className={message.role === 'user' ? styles.user : styles.answer}
+                aria-label={message.role === 'user' ? 'Your message' : 'iDoc response'}
               >
-                <div className={styles.author}>
-                  {message.role === 'assistant' ? (
-                    <>
-                      <span className={styles.aiIcon}>
-                        <Sparkles size={16} />
-                      </span>
-                      iDoc
-                      <span className="muted">
-                        {w.preview ? 'Example response' : 'Document answer'}
-                      </span>
-                    </>
-                  ) : (
-                    <span>You</span>
-                  )}
-                </div>
+                {message.role === 'assistant' && (
+                  <div className={styles.author}>
+                    <Sparkles size={18} /> iDoc {w.preview && <span>Example response</span>}
+                  </div>
+                )}
                 <div className={styles.messageContent}>
                   <MessageContent message={message} />
                 </div>
                 {message.role === 'assistant' && (
-                  <div className={styles.answerActions}>
-                    <button
-                      onClick={async () => {
-                        try {
-                          await navigator.clipboard.writeText(message.content);
-                          setCopied(index);
-                        } catch {
-                          setError('Could not copy the answer. Select the text to copy it.');
-                        }
-                      }}
-                    >
-                      {copied === index ? <Check size={14} /> : <Copy size={14} />}{' '}
-                      {copied === index ? 'Copied' : 'Copy answer'}
-                    </button>
-                    {message.sources?.map((source) => (
+                  <>
+                    {isInsufficientAnswer(message.content) && (
+                      <p className={styles.answerHint}>
+                        Try a more specific question or choose another document. Retrieved passages
+                        may not contain an answer.
+                      </p>
+                    )}
+                    <div className={styles.answerActions}>
                       <button
-                        key={source.source_id}
-                        className={styles.citation}
-                        onClick={() => {
-                          w.setSources(message.sources || []);
-                          w.setActiveSource(source.source_id);
+                        aria-label={copied === index ? 'Copied' : 'Copy answer'}
+                        title={copied === index ? 'Copied' : 'Copy answer'}
+                        onClick={async () => {
+                          try {
+                            await navigator.clipboard.writeText(message.content);
+                            setCopied(index);
+                          } catch {
+                            setError('Could not copy the answer. Select the text to copy it.');
+                          }
                         }}
                       >
-                        <FileText size={13} />
-                        {source.source_id}
-                        <span>{source.file_name}</span>
+                        {copied === index ? <Check size={16} /> : <Copy size={16} />}
                       </button>
-                    ))}
-                  </div>
+                      {!!message.sources?.length && (
+                        <button className={styles.citation} onClick={() => w.openSources(message)}>
+                          <FileText size={16} />
+                          {isInsufficientAnswer(message.content)
+                            ? 'Retrieved passages'
+                            : 'View sources'}
+                          <span>
+                            · {message.sources.length}{' '}
+                            {message.sources.length === 1 ? 'passage' : 'passages'}
+                          </span>
+                          <ChevronRight size={14} />
+                        </button>
+                      )}
+                    </div>
+                  </>
                 )}
               </article>
             ))}
             {pending && (
               <p className={styles.pending} role="status">
-                <LoaderCircle size={18} />
-                Finding an answer in your documents…
+                <Spinner size={20} />
+                Looking through your documents...
               </p>
             )}
             {error && (
@@ -275,7 +195,7 @@ export function ChatWorkspace() {
                 <div className={styles.errorActions}>
                   {w.messages.at(-1)?.role === 'user' && (
                     <button disabled={pending} onClick={() => void send(true)}>
-                      <RotateCcw size={14} />
+                      <RotateCcw size={15} />
                       Retry answer
                     </button>
                   )}
@@ -286,6 +206,7 @@ export function ChatWorkspace() {
                         w.setMessages(w.messages.slice(0, -1));
                       }
                       setError('');
+                      setFocusVersion((v) => v + 1);
                     }}
                   >
                     Edit question
@@ -293,14 +214,9 @@ export function ChatWorkspace() {
                 </div>
               </div>
             )}
+            <div ref={threadEnd} className={styles.threadEnd} />
           </div>
-          <div className={styles.docked}>
-            {composer}
-            <small>
-              Verify important details in the original sources. Enter to send · Shift+Enter for a
-              new line.
-            </small>
-          </div>
+          <div className={styles.docked}>{composer}</div>
         </>
       )}
     </div>

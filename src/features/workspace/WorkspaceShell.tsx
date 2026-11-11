@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import {
   Plus,
@@ -10,8 +10,7 @@ import {
   Settings,
   LogOut,
   Menu,
-  ChevronDown,
-  PanelRight,
+  UserRound,
   ArrowUpRight,
 } from 'lucide-react';
 import { Logo } from '@/components/brand/Logo';
@@ -21,6 +20,7 @@ import { UploadDialog } from '@/features/documents/UploadDialog';
 import { WorkspaceDrawers } from './WorkspaceDrawers';
 import { signOut } from '@/features/auth/api';
 import styles from './WorkspaceShell.module.scss';
+import { GoogleLinkNotice } from '@/features/auth/GoogleLinkNotice';
 export function WorkspaceShell({ children }: { children: React.ReactNode }) {
   const w = useWorkspace();
   const pathname = usePathname();
@@ -40,10 +40,10 @@ export function WorkspaceShell({ children }: { children: React.ReactNode }) {
     setLoggingOut(true);
     setError('');
     try {
-      if (!w.preview) await signOut();
+      if (!w.preview && !w.local) await signOut();
       w.clear();
       client.clear();
-      window.location.replace('/login');
+      window.location.replace(w.local ? '/' : '/login');
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Could not sign out.');
       setLoggingOut(false);
@@ -59,14 +59,18 @@ export function WorkspaceShell({ children }: { children: React.ReactNode }) {
         New chat
       </button>
       <nav aria-label="Workspace">
-        <Link
-          href={`${w.base}/chat`}
-          onClick={() => setMobile(false)}
-          aria-current={pathname.endsWith('/chat') ? 'page' : undefined}
-        >
-          <MessageSquare size={18} />
-          Chat
-        </Link>
+        {(w.messages.length > 0 ||
+          pathname.endsWith('/documents') ||
+          pathname.endsWith('/profile')) && (
+          <Link
+            href={`${w.base}/chat`}
+            onClick={() => setMobile(false)}
+            aria-current={pathname.endsWith('/chat') ? 'page' : undefined}
+          >
+            <MessageSquare size={18} />
+            Chat
+          </Link>
+        )}
         <Link
           href={`${w.base}/documents`}
           onClick={() => setMobile(false)}
@@ -77,16 +81,7 @@ export function WorkspaceShell({ children }: { children: React.ReactNode }) {
         </Link>
       </nav>
       <div className={styles.sidebarBottom}>
-        <span className={styles.connection}>
-          <i data-connected={!w.preview && w.healthQuery.isSuccess} />
-          {w.preview
-            ? 'Frontend preview'
-            : w.healthQuery.isSuccess
-              ? 'API connected'
-              : w.healthQuery.isPending
-                ? 'Connecting…'
-                : 'Disconnected'}
-        </span>
+        <div className={styles.account}><UserRound size={19} /><span>{w.preview ? 'Demo workspace' : w.local ? 'Local workspace' : w.sessionQuery.data?.user.email || 'Your account'}</span></div>
         <button
           onClick={() => {
             setMobile(false);
@@ -98,7 +93,13 @@ export function WorkspaceShell({ children }: { children: React.ReactNode }) {
         </button>
         <button onClick={logout} disabled={loggingOut}>
           <LogOut size={18} />
-          {loggingOut ? 'Signing out…' : w.preview ? 'Leave preview' : 'Sign out'}
+          {loggingOut
+            ? 'Leaving…'
+            : w.preview
+              ? 'Leave preview'
+              : w.local
+                ? 'Leave workspace'
+                : 'Sign out'}
         </button>
         {error && (
           <p role="alert" className="error">
@@ -128,27 +129,26 @@ export function WorkspaceShell({ children }: { children: React.ReactNode }) {
           <Link href="/" className={styles.mobileBrand} aria-label="iDoc home">
             <Logo />
           </Link>
-          <button className={styles.scope} onClick={() => w.setScopeOpen(true)}>
-            <span className="muted">Scope:</span>{' '}
-            {w.selectedIds.length
-              ? `${w.selectedIds.length} selected`
-              : `All documents (${w.docs.filter((d) => d.status === 'ready').length})`}
-            <ChevronDown size={14} />
+          <span className={styles.pageTitle}>
+            {pathname.endsWith('/profile')
+              ? 'Profile'
+              : pathname.endsWith('/documents')
+                ? 'Documents'
+                : 'Chat'}
+          </span>
+          <button
+            className={styles.mobileNewChat}
+            aria-label="New chat"
+            onClick={() => (w.messages.length ? setConfirm(true) : newChat())}
+          >
+            <Plus size={20} />
           </button>
-          <div className={styles.headerRight}>
-            <span>
-              {w.preview ? 'Preview workspace' : w.config?.answer_model || 'Document workspace'}
-            </span>
-            {w.sources && (
-              <button
-                aria-label="Open sources"
-                onClick={() => w.setActiveSource(w.sources?.[0]?.source_id || null)}
-              >
-                <PanelRight size={17} />
-              </button>
-            )}
-          </div>
         </header>
+        {!w.preview && !w.local && (
+          <Suspense fallback={null}>
+            <GoogleLinkNotice />
+          </Suspense>
+        )}
         {w.preview && (
           <div className={styles.previewBanner}>
             <span>

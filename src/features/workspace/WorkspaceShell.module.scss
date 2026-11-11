@@ -2,14 +2,14 @@
   min-height: 100dvh;
 }
 .sidebar {
-  width: 216px;
+  width: 224px;
   position: fixed;
   inset: 0 auto 0 0;
   background: var(--sidebar);
-  border-right: 1px solid var(--border);
+  border-right: 1px solid #ffffff08;
   display: flex;
   flex-direction: column;
-  padding: 0 8px 12px;
+  padding: 0 14px 16px;
   z-index: 20;
   nav {
     display: grid;
@@ -19,104 +19,101 @@
     display: flex;
     gap: 10px;
     align-items: center;
-    padding: 10px;
-    border-radius: 6px;
+    padding: 11px 12px;
+    border-radius: 10px;
     color: var(--muted);
   }
-  nav a[aria-current] {
-    background: #1c1f26;
-    color: var(--text);
-    svg {
-      color: var(--orange);
-    }
-  }
+  nav a[aria-current],
   nav a:hover {
-    background: #1c1f26;
+    background: var(--elevated);
+    color: var(--text);
   }
 }
 .brand {
   display: flex;
   align-items: center;
-  height: 64px;
-  border-bottom: 1px solid var(--border);
-  margin: 0 -8px 12px;
-  padding-left: 12px;
+  height: 76px;
+  margin-bottom: 16px;
+  padding-left: 10px;
 }
 .newChat {
   justify-content: flex-start;
-  margin: 0 0 12px;
+  margin: 0 0 8px;
   width: 100%;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  padding: 11px 12px;
+  svg {
+    color: var(--orange);
+  }
 }
 .sidebarBottom {
   margin-top: auto;
   padding-top: 16px;
   display: grid;
-  gap: 6px;
+  gap: 4px;
+  border-top: 1px solid var(--border);
   button {
     justify-content: flex-start;
     background: transparent;
     border: 0;
+    border-radius: 10px;
+    color: var(--muted);
   }
 }
-.connection {
-  font-size: 11px;
-  border: 1px solid var(--border);
-  padding: 9px;
-  border-radius: 6px;
+.account {
   display: flex;
-  gap: 8px;
   align-items: center;
-  color: var(--muted);
-  i {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--orange);
+  gap: 10px;
+  padding: 12px;
+  font-size: 12px;
+  min-width: 0;
+  svg {
+    flex-shrink: 0;
+    color: #f1b796;
   }
-  i[data-connected='true'] {
-    background: #34d399;
+  span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 .main {
-  margin-left: 216px;
+  margin-left: 224px;
   min-width: 0;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
 }
 .header {
   height: 64px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 12px;
-  padding: 0 24px;
-  border-bottom: 1px solid var(--border);
+  padding: 0 28px;
   background: #08090bf5;
   position: sticky;
   top: 0;
   z-index: 10;
 }
-.scope {
-  font-size: 12px;
-  padding: 7px 10px;
-  background: var(--surface);
+.pageTitle {
+  color: var(--muted);
+  font-size: 15px;
+  font-weight: 500;
 }
-.headerRight {
+.content {
+  flex: 1;
   display: flex;
-  gap: 12px;
-  align-items: center;
-  > span {
-    color: var(--muted);
-    font-size: 11px;
-    border: 1px solid var(--border);
-    padding: 4px 12px;
-    border-radius: 20px;
-  }
+  flex-direction: column;
+  min-width: 0;
 }
 .previewBanner {
   display: flex;
   justify-content: space-between;
   gap: 12px;
   padding: 8px 24px;
-  border-bottom: 1px solid #ff6b2b23;
   background: #ff6b2b08;
   color: #c4a897;
   font-size: 11px;
@@ -127,10 +124,9 @@
     white-space: nowrap;
   }
 }
-.content {
-  min-height: calc(100dvh - 102px);
-}
-.mobileMenu {
+.mobileMenu,
+.mobileBrand,
+.mobileNewChat {
   display: none;
 }
 .actions {
@@ -157,15 +153,13 @@
 @media (min-width: 768px) and (max-width: 1023px) {
   .sidebar {
     width: 184px;
+    padding-inline: 8px;
   }
   .main {
     margin-left: 184px;
   }
   .header {
-    padding: 0 16px;
-  }
-  .headerRight > span {
-    display: none;
+    padding: 0 20px;
   }
 }
 @media (max-width: 767px) {
@@ -177,31 +171,18 @@
   }
   .header {
     height: 58px;
-    padding: 0 16px;
+    padding: 0 12px;
+    justify-content: space-between;
   }
-  .mobileMenu {
+  .mobileMenu,
+  .mobileNewChat {
     display: inline-flex;
-    padding: 7px;
-    background: none;
+    width: 42px;
+    height: 42px;
+    padding: 8px;
     border: 0;
+    background: none;
   }
-  .headerRight > span {
-    display: none;
-  }
-  .scope {
-    font-size: 11px;
-  }
-  .previewBanner {
-    padding: 8px 16px;
-  }
-  .content {
-    min-height: calc(100dvh - 104px);
-  }
-}
-.mobileBrand {
-  display: none;
-}
-@media (max-width: 767px) {
   .mobileBrand {
     display: flex;
     > span {
@@ -209,18 +190,41 @@
       height: 28px;
     }
   }
-  .header {
-    gap: 6px;
-  }
-  .headerRight:empty {
+  .pageTitle {
     display: none;
   }
-  .scope > span:first-child {
-    display: none;
+  .previewBanner {
+    padding: 8px 16px;
   }
 }
 @media (min-width: 1280px) {
   .sourceOpen .content {
     padding-right: 420px;
   }
+}
+
+.account {
+  border-radius: 12px;
+  transition: background-color 240ms ease;
+  > div {
+    min-width: 0;
+  }
+  strong,
+  small {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  strong {
+    font-weight: 500;
+  }
+  small {
+    font-size: 10px;
+    color: var(--muted);
+  }
+}
+a.account:hover,
+.account[aria-current] {
+  background: var(--elevated);
 }

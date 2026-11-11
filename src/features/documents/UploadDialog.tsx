@@ -1,6 +1,7 @@
 'use client';
+import { Spinner } from '@/components/ui/Spinner';
 import { useRef, useState } from 'react';
-import { UploadCloud, FileText, LoaderCircle, CheckCircle2, AlertCircle } from 'lucide-react';
+import { UploadCloud, FileText, CheckCircle2, AlertCircle } from 'lucide-react';
 import { Dialog } from '@/components/ui/Dialog';
 import { useWorkspace } from '@/features/workspace/WorkspaceContext';
 import { formatSize } from '@/lib/api/client';
@@ -26,12 +27,14 @@ export function UploadDialog() {
     if (lock.current) return;
     lock.current = true;
     setBusy(true);
+    const uploadedIds: string[] = [];
     try {
       for (const item of items) {
         if (item.status === 'Failed') continue;
         update(item.id, { status: 'Processing' });
         try {
           const result = await w.upload(item.file);
+          uploadedIds.push(result.document_id);
           update(item.id, {
             status: result.status === 'already_exists' ? 'Already indexed' : 'Ready',
             error: undefined,
@@ -44,6 +47,7 @@ export function UploadDialog() {
         }
       }
     } finally {
+      if (uploadedIds.length) w.setSelected([...new Set(uploadedIds)].slice(0, 100));
       lock.current = false;
       setBusy(false);
     }
@@ -132,7 +136,7 @@ export function UploadDialog() {
                   }
                 >
                   {item.status === 'Processing' ? (
-                    <LoaderCircle size={15} />
+                    <Spinner size={16} />
                   ) : item.status === 'Ready' ? (
                     <CheckCircle2 size={15} />
                   ) : null}

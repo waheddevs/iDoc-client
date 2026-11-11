@@ -1,50 +1,30 @@
 'use client';
-import { FileText, Check, RefreshCw, Server, BookOpen } from 'lucide-react';
+import { RefreshCw, Server } from 'lucide-react';
 import { Dialog } from '@/components/ui/Dialog';
 import { useWorkspace } from './WorkspaceContext';
 import { formatSize } from '@/lib/api/client';
 import styles from './WorkspaceDrawers.module.scss';
+import { DocumentPicker } from './DocumentPicker';
+import { SourcesPanel } from './SourcesPanel';
+import { GoogleButton } from '@/features/auth/GoogleButton';
 export function WorkspaceDrawers() {
   const w = useWorkspace();
   return (
     <>
-      {w.scopeOpen && (
-        <Dialog title="Document scope" onClose={() => w.setScopeOpen(false)}>
-          <p>Choose the documents to include in your next question.</p>
-          <button className={styles.all} onClick={() => w.setSelected([])}>
-            <BookOpen size={17} />
-            All ready documents{!w.selectedIds.length && <Check size={16} />}
-          </button>
-          <div className={styles.options}>
-            {w.docs
-              .filter((d) => d.status === 'ready')
-              .map((d) => (
-                <label key={d.document_id}>
-                  <input
-                    type="checkbox"
-                    checked={w.selectedIds.includes(d.document_id)}
-                    onChange={(e) =>
-                      w.setSelected(
-                        e.target.checked
-                          ? [...w.selectedIds, d.document_id]
-                          : w.selectedIds.filter((id) => id !== d.document_id),
-                      )
-                    }
-                  />
-                  <FileText size={17} />
-                  <span>{d.file_name}</span>
-                </label>
-              ))}
-          </div>
-          {!w.docs.length && <p>No documents yet. Upload a document to get started.</p>}
-          <button className="primary" onClick={() => w.setScopeOpen(false)}>
-            Apply scope
-          </button>
-        </Dialog>
-      )}
+      {w.scopeOpen && <DocumentPicker />}
       {w.settingsOpen && (
         <Dialog title="Workspace settings" drawer onClose={() => w.setSettingsOpen(false)}>
-          <p>Connection and processing configuration. Read only.</p>
+          <p>Account connections and read-only processing configuration.</p>
+          {!w.preview && !w.local && (
+            <section className={styles.section}>
+              <h3>Google account</h3>
+              <p>
+                Link a Google account with the same email to sign in to this workspace. Your
+                documents stay in this account.
+              </p>
+              <GoogleButton returnTo="/chat" intent="link" />
+            </section>
+          )}
           <section className={styles.section}>
             <h3>
               <Server size={16} />
@@ -60,6 +40,24 @@ export function WorkspaceDrawers() {
                     : w.healthQuery.isPending
                       ? 'Checking…'
                       : 'Unavailable'}
+              </dd>
+              <dt>Model readiness</dt>
+              <dd>
+                {w.preview
+                  ? 'Preview'
+                  : w.readinessQuery.isSuccess
+                    ? 'Ready'
+                    : w.readinessQuery.isPending
+                      ? 'Checking…'
+                      : w.readinessQuery.error?.message || 'Unavailable'}
+              </dd>
+              <dt>Access</dt>
+              <dd>
+                {w.preview
+                  ? 'Example data'
+                  : w.local
+                    ? 'Local single-user workspace'
+                    : 'Authenticated workspace'}
               </dd>
             </dl>
           </section>
@@ -113,6 +111,7 @@ export function WorkspaceDrawers() {
               onClick={() => {
                 void w.configQuery.refetch();
                 void w.healthQuery.refetch();
+                void w.readinessQuery.refetch();
               }}
             >
               <RefreshCw size={15} />
@@ -121,41 +120,7 @@ export function WorkspaceDrawers() {
           )}
         </Dialog>
       )}
-      {w.activeSource && w.sources && (
-        <Dialog title="Sources" drawer readingPanel onClose={() => w.setActiveSource(null)}>
-          <p>Inspect the original passages behind this answer.</p>
-          <div className={styles.tabs}>
-            {w.sources.map((source) => (
-              <button
-                key={source.source_id}
-                aria-pressed={w.activeSource === source.source_id}
-                onClick={() => w.setActiveSource(source.source_id)}
-              >
-                {source.source_id}
-              </button>
-            ))}
-          </div>
-          {w.sources
-            .filter((s) => s.source_id === w.activeSource)
-            .map((source) => (
-              <article key={source.source_id} className={styles.source}>
-                <span className="eyebrow">{source.source_id} · Source passage</span>
-                <h3>
-                  <FileText size={18} />
-                  {source.file_name}
-                </h3>
-                {source.page_label && <p>Page {source.page_label}</p>}
-                {!w.docs.some((d) => d.document_id === source.document_id) && (
-                  <p className="notice">Document removed · this is a saved excerpt.</p>
-                )}
-                <blockquote>{source.text}</blockquote>
-              </article>
-            ))}
-          <p className="muted">
-            Sources provide context. Verify important details in the original document.
-          </p>
-        </Dialog>
-      )}
+      {w.activeSource && <SourcesPanel />}
     </>
   );
 }

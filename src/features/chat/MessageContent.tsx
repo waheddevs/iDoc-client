@@ -18,8 +18,7 @@ export function MessageContent({ message }: { message: Message }) {
             className={styles.inlineCitation}
             aria-label={`Open source ${id}`}
             onClick={() => {
-              w.setSources(message.sources || []);
-              w.setActiveSource(id);
+              w.openSources(message, id);
             }}
           >
             {text}

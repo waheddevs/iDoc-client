@@ -12,7 +12,7 @@ import { ApiError, api, queryKeys } from '@/lib/api/client';
 import type { Config, Conversation, Doc, Message, Source } from '@/lib/api/types';
 import { listDocuments, uploadDocument, deleteDocument } from '@/features/documents/api';
 import { completeChat } from '@/features/chat/api';
-import { isInsufficientAnswer } from '@/features/chat/source-utils';
+import { usesRetrievedPassages } from '@/features/chat/source-utils';
 import { demoDocuments, demoConfig, demoAnswer } from './demo';
 function useWorkspaceState(preview: boolean, local: boolean) {
   const client = useQueryClient();
@@ -192,7 +192,7 @@ function useWorkspaceState(preview: boolean, local: boolean) {
   const openSources = (message: Message, sourceId = message.sources?.[0]?.source_id) => {
     if (!sourceId) return;
     setSources(message.sources || []);
-    setSourcesAreRetrieved(isInsufficientAnswer(message.content));
+    setSourcesAreRetrieved(usesRetrievedPassages(message));
     setActiveSource(sourceId);
   };
   const remove = async (id: string) => {
@@ -253,6 +253,11 @@ function useWorkspaceState(preview: boolean, local: boolean) {
     } catch (error) {
       accepted = false;
       if (version === conversationVersion.current) {
+        if (
+          error instanceof ApiError &&
+          ['summary_selection_required', 'summary_scope_too_large'].includes(error.code || '')
+        )
+          setScopeOpen(true);
         if (!preview && target) {
           // The request may have reached the server even if the response was lost.
           try {

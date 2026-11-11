@@ -5,7 +5,7 @@ import { Spinner } from '@/components/ui/Spinner';
 import { useWorkspace } from '@/features/workspace/WorkspaceContext';
 import { MessageContent } from './MessageContent';
 import { ChatComposer } from './ChatComposer';
-import { isInsufficientAnswer } from './source-utils';
+import { isInsufficientAnswer, usesRetrievedPassages, isSummaryQuestion } from './source-utils';
 import styles from './ChatWorkspace.module.scss';
 export function ChatWorkspace({ conversationId = null }: { conversationId?: string | null }) {
   const w = useWorkspace();
@@ -144,10 +144,24 @@ export function ChatWorkspace({ conversationId = null }: { conversationId?: stri
                 </div>
                 {message.role === 'assistant' && (
                   <>
-                    {isInsufficientAnswer(message.content) && (
+                    {isInsufficientAnswer(message.content, message.answer_status) && (
                       <p className={styles.answerHint}>
                         Try a more specific question or choose another document. Retrieved passages
                         may not contain an answer.
+                      </p>
+                    )}
+                    {message.coverage && (
+                      <p className={styles.answerHint}>
+                        {message.coverage.partial ? 'Partial overview' : 'Indexed-text overview'}
+                        {' · '}
+                        {message.coverage.reviewed_chunks} of {message.coverage.total_chunks}{' '}
+                        passages reviewed. Images and pages without extractable text are not
+                        included.
+                      </p>
+                    )}
+                    {message.answer_status === 'unverified' && (
+                      <p className={styles.answerHint}>
+                        This answer has no source references. Check the retrieved passages.
                       </p>
                     )}
                     <div className={styles.answerActions}>
@@ -168,7 +182,7 @@ export function ChatWorkspace({ conversationId = null }: { conversationId?: stri
                       {!!message.sources?.length && (
                         <button className={styles.citation} onClick={() => w.openSources(message)}>
                           <FileText size={16} />
-                          {isInsufficientAnswer(message.content) ? 'Retrieved passages' : 'View sources'}
+                          {usesRetrievedPassages(message) ? 'Retrieved passages' : 'View sources'}
                           <span>
                             · {message.sources.length}{' '}
                             {message.sources.length === 1 ? 'passage' : 'passages'}
@@ -184,7 +198,11 @@ export function ChatWorkspace({ conversationId = null }: { conversationId?: stri
             {pending && (
               <p className={styles.pending} role="status">
                 <Spinner size={20} />
-                Looking through your documents...
+                {isSummaryQuestion(
+                  w.messages.filter((m) => m.role === 'user').at(-1)?.content || '',
+                )
+                  ? 'Summarizing your documents...'
+                  : 'Looking through your documents...'}
               </p>
             )}
             {error && (

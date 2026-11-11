@@ -17,7 +17,21 @@ export type Source = {
   text: string;
   score: number | null;
 };
-export type Message = { role: 'user' | 'assistant'; content: string; sources?: Source[] };
+export type AnswerMetadata = {
+  answer_status?: 'answered' | 'insufficient_evidence' | 'unverified';
+  mode?: 'question' | 'summary';
+  coverage?: {
+    total_chunks: number;
+    reviewed_chunks: number;
+    partial: boolean;
+    basis: 'indexed_text';
+  } | null;
+};
+export type Message = AnswerMetadata & {
+  role: 'user' | 'assistant';
+  content: string;
+  sources?: Source[];
+};
 export type Config = {
   app_name: string;
   supported_extensions: string[];
@@ -30,12 +44,17 @@ export type Config = {
   embedding_processing: 'local' | 'cloud';
   features: { ocr: boolean };
 };
-export type Completion = {
+export type Completion = AnswerMetadata & {
   choices: { message: { role: 'assistant'; content: string } }[];
   sources: Source[] | null;
 };
 
-export type Profile = { user: User; has_password: boolean; google_connected: boolean; created_at: number };
+export type Profile = {
+  user: User;
+  has_password: boolean;
+  google_connected: boolean;
+  created_at: number;
+};
 export type ConversationSummary = {
   id: string;
   title: string;

@@ -57,11 +57,14 @@ test('simplified chat handles document selection, processing and retrieved passa
     conversation.revision = 1;
     await answerGate;
     const completion: Completion = {
+      mode: 'summary',
+      answer_status: 'insufficient_evidence',
+      coverage: { partial: true, total_chunks: 100, reviewed_chunks: 2, basis: 'indexed_text' },
       choices: [
         {
           message: {
             role: 'assistant',
-            content: 'Available documents do not provide enough information.',
+            content: 'These excerpts only list references and cannot support a summary.',
           },
         },
       ],
@@ -77,6 +80,9 @@ test('simplified chat handles document selection, processing and retrieved passa
     };
     conversation.messages.push({
       ...completion.choices[0].message,
+      mode: completion.mode,
+      answer_status: completion.answer_status,
+      coverage: completion.coverage,
       sources: completion.sources || [],
     });
     conversation.pending = false;
@@ -94,10 +100,10 @@ test('simplified chat handles document selection, processing and retrieved passa
   await page.getByRole('checkbox', { name: fileName }).check();
   await page.getByRole('button', { name: 'Use documents' }).click();
   await expect(page.getByRole('button', { name: 'Choose documents: ' + fileName })).toBeVisible();
-  await page.getByLabel('Ask a question').fill('What does this file say?');
+  await page.getByLabel('Ask a question').fill('Summarize this document');
   await page.getByRole('button', { name: 'Send question' }).click();
   await expect(
-    page.getByRole('status').filter({ hasText: 'Looking through your documents' }),
+    page.getByRole('status').filter({ hasText: 'Summarizing your documents' }),
   ).toBeVisible();
   await expect(page.getByRole('button', { name: 'Send question' })).toBeDisabled();
   await expect(page.getByRole('button', { name: /Choose documents:/ })).toBeDisabled();
@@ -106,6 +112,7 @@ test('simplified chat handles document selection, processing and retrieved passa
     '20px',
   );
   releaseAnswer();
+  await expect(page.getByText(/Partial overview/)).toBeVisible();
   await page.getByRole('button', { name: /Retrieved passages/ }).click();
   const panel = page.getByRole('dialog', { name: 'Sources' });
   await expect(panel).toContainText('did not provide enough information');

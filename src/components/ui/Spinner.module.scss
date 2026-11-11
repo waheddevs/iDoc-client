@@ -1,0 +1,17 @@
+.spinner.spinner {
+  display: inline-flex;
+  flex-shrink: 0;
+  vertical-align: middle;
+
+  :global(.MuiCircularProgress-circle) {
+    stroke-linecap: round;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+
+    :global(.MuiCircularProgress-circle) {
+      animation: none;
+    }
+  }
+}

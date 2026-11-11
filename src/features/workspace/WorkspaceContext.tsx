@@ -176,7 +176,7 @@ function useWorkspaceState(preview: boolean, local: boolean) {
         status: 'ready',
       },
     ]);
-    return { document_id: id, status: 'success' as const };
+    return { document_id: id, status: 'success' as const, total_pages: null, text_pages: null };
   };
   const upload = async (file: File) => {
     setUploadNotice({ name: file.name, status: 'processing' });

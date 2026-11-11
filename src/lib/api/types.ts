@@ -1,5 +1,7 @@
 export type User = { id: string; email: string; name?: string; avatar_version?: string | null };
 export type Doc = {
+  total_pages?: number | null;
+  text_pages?: number | null;
   document_id: string;
   file_name: string;
   file_type: string;

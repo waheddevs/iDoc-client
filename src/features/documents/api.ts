@@ -6,7 +6,12 @@ export const deleteDocument = (id: string) =>
 export const uploadDocument = (file: File) => {
   const data = new FormData();
   data.append('file', file);
-  return api<{ document_id: string; status: 'success' | 'already_exists' }>('v1/ingest/file', {
+  return api<{
+    document_id: string;
+    status: 'success' | 'already_exists';
+    total_pages?: number | null;
+    text_pages?: number | null;
+  }>('v1/ingest/file', {
     method: 'POST',
     body: data,
   });

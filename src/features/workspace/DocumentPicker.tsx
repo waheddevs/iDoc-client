@@ -74,6 +74,13 @@ export function DocumentPicker() {
                 {doc.file_type.toUpperCase()}
                 <span aria-hidden="true"> &middot; </span>
                 {formatSize(doc.size_bytes)}
+                {doc.total_pages != null &&
+                  doc.text_pages != null &&
+                  doc.text_pages < doc.total_pages && (
+                    <span className={styles.warning}>
+                      Text available on {doc.text_pages}/{doc.total_pages} pages
+                    </span>
+                  )}
               </small>
             </span>
             <input

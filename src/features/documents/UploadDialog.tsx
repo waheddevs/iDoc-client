@@ -11,6 +11,7 @@ type Item = {
   file: File;
   status: 'Queued' | 'Processing' | 'Ready' | 'Already indexed' | 'Failed';
   error?: string;
+  warning?: string;
 };
 export function UploadDialog() {
   const w = useWorkspace();
@@ -38,6 +39,16 @@ export function UploadDialog() {
           update(item.id, {
             status: result.status === 'already_exists' ? 'Already indexed' : 'Ready',
             error: undefined,
+            warning:
+              result.total_pages != null &&
+              result.text_pages != null &&
+              result.text_pages < result.total_pages
+                ? 'Text available on ' +
+                  result.text_pages +
+                  '/' +
+                  result.total_pages +
+                  ' pages. Images and scanned pages need OCR.'
+                : undefined,
           });
         } catch (e) {
           update(item.id, {
@@ -129,6 +140,7 @@ export function UploadDialog() {
                   <strong>{item.file.name}</strong>
                   <small>{formatSize(item.file.size)}</small>
                   {item.error && <small className="error">{item.error}</small>}
+                  {item.warning && <small>{item.warning}</small>}
                 </div>
                 <span
                   className={

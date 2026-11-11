@@ -104,6 +104,10 @@ test('local mode, readiness, error codes and request boundaries', async ({ page,
   ).toBe(403);
   expect((await request.get('/api/backend/unknown')).status()).toBe(404);
   await page.getByRole('button', { name: 'Leave workspace' }).click();
+  await page
+    .getByRole('dialog', { name: 'Leave workspace?' })
+    .getByRole('button', { name: 'Leave workspace', exact: true })
+    .click();
   await expect(page).toHaveURL('/');
 });
 

@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Suspense, useState } from 'react';
+import { Suspense, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import {
   Plus,
@@ -15,12 +15,14 @@ import {
 } from 'lucide-react';
 import { Logo } from '@/components/brand/Logo';
 import { Avatar } from '@/components/ui/Avatar';
+import { Spinner } from '@/components/ui/Spinner';
 import { Dialog } from '@/components/ui/Dialog';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { useWorkspace } from './WorkspaceContext';
 import { UploadDialog } from '@/features/documents/UploadDialog';
 import { WorkspaceDrawers } from './WorkspaceDrawers';
 import { signOut } from '@/features/auth/api';
+import { LogoutDialog } from '@/features/auth/LogoutDialog';
 import styles from './WorkspaceShell.module.scss';
 import { ConversationHistory } from '@/features/chat/ConversationHistory';
 import { GoogleLinkNotice } from '@/features/auth/GoogleLinkNotice';
@@ -32,6 +34,8 @@ export function WorkspaceShell({ children }: { children: React.ReactNode }) {
   const [mobile, setMobile] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+  const [logoutOpen, setLogoutOpen] = useState(false);
+  const logoutLock = useRef(false);
   const [error, setError] = useState('');
   const newChat = () => {
     w.clear();
@@ -40,6 +44,8 @@ export function WorkspaceShell({ children }: { children: React.ReactNode }) {
     router.push(`${w.base}/chat`);
   };
   const logout = async () => {
+    if (logoutLock.current) return;
+    logoutLock.current = true;
     setLoggingOut(true);
     setError('');
     try {
@@ -49,6 +55,7 @@ export function WorkspaceShell({ children }: { children: React.ReactNode }) {
       window.location.replace(w.local ? '/' : '/login');
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Could not sign out.');
+      logoutLock.current = false;
       setLoggingOut(false);
     }
   };
@@ -85,30 +92,60 @@ export function WorkspaceShell({ children }: { children: React.ReactNode }) {
       </nav>
       <ConversationHistory onNavigate={() => setMobile(false)} />
       <div className={styles.sidebarBottom}>
-        {!w.preview && !w.local ? (
-          <Link
-            href="/profile"
-            aria-label="Profile"
-            aria-current={pathname === '/profile' ? 'page' : undefined}
-            className={styles.account}
-            onClick={() => setMobile(false)}
-          >
-            <Avatar user={w.sessionQuery.data?.user} size={32} />
-            <div>
-              <strong>
-                {w.sessionQuery.data?.user.name ||
-                  w.sessionQuery.data?.user.email.split('@')[0] ||
-                  'Your account'}
-              </strong>
-              <small>Profile &amp; settings</small>
+        <div className={styles.accountCard}>
+          {!w.preview && !w.local ? (
+            <Link
+              href="/profile"
+              aria-label="Profile"
+              aria-current={pathname === '/profile' ? 'page' : undefined}
+              className={styles.account}
+              onClick={() => setMobile(false)}
+            >
+              <Avatar user={w.sessionQuery.data?.user} size={32} />
+              <div>
+                <strong>
+                  {w.sessionQuery.data?.user.name ||
+                    w.sessionQuery.data?.user.email.split('@')[0] ||
+                    'Your account'}
+                </strong>
+                <small>Profile &amp; settings</small>
+              </div>
+            </Link>
+          ) : (
+            <div className={styles.account}>
+              <UserRound size={19} />
+              <span>{w.preview ? 'Demo workspace' : 'Local workspace'}</span>
             </div>
-          </Link>
-        ) : (
-          <div className={styles.account}>
-            <UserRound size={19} />
-            <span>{w.preview ? 'Demo workspace' : 'Local workspace'}</span>
-          </div>
-        )}
+          )}
+          <button
+            className={styles.logoutIcon}
+            onClick={() => {
+              setError('');
+              setLogoutOpen(true);
+            }}
+            disabled={loggingOut}
+            aria-label={
+              loggingOut
+                ? 'Signing out'
+                : w.preview
+                  ? 'Leave preview'
+                  : w.local
+                    ? 'Leave workspace'
+                    : 'Sign out'
+            }
+            title={
+              loggingOut
+                ? 'Signing out'
+                : w.preview
+                  ? 'Leave preview'
+                  : w.local
+                    ? 'Leave workspace'
+                    : 'Sign out'
+            }
+          >
+            {loggingOut ? <Spinner size={18} /> : <LogOut size={18} aria-hidden="true" />}
+          </button>
+        </div>
         <button
           onClick={() => {
             setMobile(false);
@@ -118,21 +155,6 @@ export function WorkspaceShell({ children }: { children: React.ReactNode }) {
           <Settings size={18} />
           Settings
         </button>
-        <button onClick={logout} disabled={loggingOut}>
-          <LogOut size={18} />
-          {loggingOut
-            ? 'Leaving…'
-            : w.preview
-              ? 'Leave preview'
-              : w.local
-                ? 'Leave workspace'
-                : 'Sign out'}
-        </button>
-        {error && (
-          <p role="alert" className="error">
-            {error}
-          </p>
-        )}
       </div>
     </>
   );
@@ -204,6 +226,17 @@ export function WorkspaceShell({ children }: { children: React.ReactNode }) {
           cancelLabel="Keep conversation"
           onClose={() => setConfirm(false)}
           onConfirm={newChat}
+        />
+      )}
+      {logoutOpen && (
+        <LogoutDialog
+          mode={w.preview ? 'preview' : w.local ? 'local' : 'account'}
+          busy={loggingOut}
+          error={error}
+          onClose={() => {
+            if (!logoutLock.current) setLogoutOpen(false);
+          }}
+          onConfirm={logout}
         />
       )}
       {w.uploadOpen && <UploadDialog />}

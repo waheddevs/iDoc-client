@@ -242,3 +242,36 @@ a.account:hover,
 .sidebarBottom {
   flex-shrink: 0;
 }
+
+.accountCard {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  .account {
+    flex: 1;
+    padding: 10px 8px;
+  }
+}
+.sidebarBottom .logoutIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 40px;
+  flex: 0 0 36px;
+  padding: 0;
+  border-radius: 12px;
+  transition:
+    color 240ms ease,
+    background-color 240ms ease;
+  &:hover:not(:disabled) {
+    color: #ffb18f;
+    background: #ff6b2b12;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sidebarBottom .logoutIcon {
+    transition: none;
+  }
+}

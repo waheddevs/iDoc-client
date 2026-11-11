@@ -49,6 +49,10 @@ test('client validation blocks requests; real backend errors map to separate fie
   await createAccount(page, address);
   expect(submissions).toBe(1);
   await page.getByRole('button', { name: 'Sign out', exact: true }).click();
+  await page
+    .getByRole('dialog', { name: 'Sign out?', exact: true })
+    .getByRole('button', { name: 'Sign out', exact: true })
+    .click();
   await expect(page).toHaveURL(/\/login$/);
   await page.goto('/signup');
   await page.getByLabel('Email address').fill(address.toUpperCase());
@@ -168,6 +172,10 @@ test('real account sessions isolate documents, chat sources and deletion across 
     await page.reload();
     await expect(page.getByText('alice-private.txt', { exact: true }).first()).toBeVisible();
     await page.getByRole('button', { name: 'Sign out', exact: true }).click();
+    await page
+      .getByRole('dialog', { name: 'Sign out?', exact: true })
+      .getByRole('button', { name: 'Sign out', exact: true })
+      .click();
     await expect(page).toHaveURL(/\/login$/);
     expect(
       (
@@ -280,4 +288,51 @@ test('pending login blocks repeat submits and a network failure has its own mess
   await expect(page.locator('#email-error, #password-error')).toHaveCount(0);
   await expect(page.getByLabel('Email address')).toHaveValue('network@example.com');
   await expect(page.getByRole('button', { name: 'Sign in', exact: true })).toBeEnabled();
+});
+
+test('logout confirmation supports cancel, failure and a single confirmed request', async ({
+  page,
+}) => {
+  await createAccount(page, email('logout-dialog'));
+  const trigger = page.getByRole('button', { name: 'Sign out', exact: true });
+  const dialog = page.getByRole('dialog', { name: 'Sign out?', exact: true });
+  let calls = 0;
+  let release!: () => void;
+  const gate = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  await page.route('**/api/backend/v1/auth/logout', async (route) => {
+    calls++;
+    if (calls === 1)
+      return route.fulfill({
+        status: 503,
+        json: { error: { message: 'Could not sign out. Please retry.' } },
+      });
+    await gate;
+    await route.continue();
+  });
+  await trigger.click();
+  await expect(dialog.getByRole('button', { name: 'Stay here' })).toBeFocused();
+  await dialog.getByRole('button', { name: 'Stay here' }).click();
+  await expect(trigger).toBeFocused();
+  expect(calls).toBe(0);
+  await trigger.click();
+  await page.keyboard.press('Escape');
+  await expect(dialog).toHaveCount(0);
+  expect(calls).toBe(0);
+  await trigger.click();
+  await page.screenshot({ path: 'artifacts/screenshots/logout-confirmation.png', animations: 'disabled' });
+  await dialog.getByRole('button', { name: 'Sign out', exact: true }).click();
+  await expect(dialog.getByRole('alert')).toContainText('Could not sign out');
+  await expect(page).toHaveURL(/\/chat$/);
+  expect((await page.request.get('/api/backend/v1/auth/session')).status()).toBe(200);
+  await dialog.getByRole('button', { name: 'Sign out', exact: true }).click();
+  await expect(dialog.getByRole('button', { name: 'Signing out...' })).toBeDisabled();
+  await expect(dialog.getByRole('button', { name: 'Stay here' })).toBeDisabled();
+  await page.keyboard.press('Escape');
+  await expect(dialog).toBeVisible();
+  expect(calls).toBe(2);
+  release();
+  await expect(page).toHaveURL(/\/login$/);
+  expect((await page.request.get('/api/backend/v1/auth/session')).status()).toBe(401);
 });

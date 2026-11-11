@@ -129,6 +129,10 @@ test('autosave survives refresh, new chat, logout and reopening in another brows
   await expect(page).toHaveURL(origin + '/chat');
   expect((await page.request.get('/api/backend/v1/conversations/' + id)).status()).toBe(404);
   await page.getByRole('button', { name: 'Sign out', exact: true }).click();
+  await page
+    .getByRole('dialog', { name: 'Sign out?', exact: true })
+    .getByRole('button', { name: 'Sign out', exact: true })
+    .click();
   await expect(page).toHaveURL(/login/);
   expect(
     (

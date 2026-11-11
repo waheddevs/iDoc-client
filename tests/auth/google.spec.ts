@@ -119,6 +119,10 @@ test('Google signup and returning signin use real private sessions and owner-sco
     await stranger.close();
   }
   await page.getByRole('button', { name: 'Sign out', exact: true }).click();
+  await page
+    .getByRole('dialog', { name: 'Sign out?', exact: true })
+    .getByRole('button', { name: 'Sign out', exact: true })
+    .click();
   await expect(page).toHaveURL(/\/login$/);
   expect(
     (
@@ -169,6 +173,10 @@ test('same email never auto-links; authenticated explicit Google link keeps the 
   await expect(page.getByLabel('Ask a question')).toBeVisible();
   expect((await session(page)).id).toBe(originalUser.id);
   await page.getByRole('button', { name: 'Sign out', exact: true }).click();
+  await page
+    .getByRole('dialog', { name: 'Sign out?', exact: true })
+    .getByRole('button', { name: 'Sign out', exact: true })
+    .click();
   await expect(page).toHaveURL(/\/login$/);
   await page.getByRole('button', { name: 'Continue with Google', exact: true }).click();
   await expect(page).toHaveURL(/\/chat$/);

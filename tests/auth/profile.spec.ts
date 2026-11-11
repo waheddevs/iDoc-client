@@ -174,6 +174,10 @@ test('password validation, password change and session revocation use the real b
     expect((await secondary.request.get('/api/backend/v1/auth/session')).status()).toBe(401);
     expect((await page.request.get('/api/backend/v1/auth/session')).status()).toBe(200);
     await page.getByRole('button', { name: 'Sign out', exact: true }).click();
+    await page
+      .getByRole('dialog', { name: 'Sign out?', exact: true })
+      .getByRole('button', { name: 'Sign out', exact: true })
+      .click();
     await expect(page).toHaveURL(/\/login$/);
     await page.goto('/profile');
     await expect(page).toHaveURL(/\/login/);

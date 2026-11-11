@@ -123,6 +123,10 @@ test('new chat confirmation, keyboard behavior and preview cleanup', async ({ pa
   await page.getByRole('button', { name: 'Start new chat', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'What would you like to know?' })).toBeVisible();
   await page.getByRole('button', { name: 'Leave preview' }).click();
+  await page
+    .getByRole('dialog', { name: 'Leave preview?' })
+    .getByRole('button', { name: 'Leave preview', exact: true })
+    .click();
   await expect(page).toHaveURL(/\/login$/);
   await page.goto('/preview/chat');
   await expect(page.getByText('Example answer', { exact: true })).toHaveCount(0);

@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 import {
   useEffect,
   useRef,
@@ -7,7 +8,6 @@ import {
   type FormEvent,
   type ReactNode,
 } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useForm, type UseFormRegisterReturn } from 'react-hook-form';
@@ -23,6 +23,7 @@ import {
   Monitor,
   ShieldCheck,
 } from 'lucide-react';
+import { useNotification } from '@/contexts/NotificationContext';
 import { Avatar } from '@/components/ui/Avatar';
 import { Spinner } from '@/components/ui/Spinner';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
@@ -40,17 +41,10 @@ import {
 import { profileSchema, passwordSchema, type PasswordValues, type ProfileValues } from './schemas';
 import styles from './ProfilePage.module.scss';
 
-function Feedback({ error, children }: { error?: boolean; children: ReactNode }) {
+function Feedback({ children }: { children: ReactNode }) {
   return (
-    <div
-      role={error ? 'alert' : 'status'}
-      className={error ? styles.errorNotice : styles.successNotice}
-    >
-      {error ? (
-        <AlertCircle size={17} aria-hidden="true" />
-      ) : (
-        <Check size={17} aria-hidden="true" />
-      )}
+    <div role="alert" className={styles.errorNotice}>
+      <AlertCircle size={17} aria-hidden="true" />
       <span>{children}</span>
     </div>
   );
@@ -118,7 +112,7 @@ export function ProfilePage() {
           Loading your profile...
         </div>
       ) : query.isError ? (
-        <Feedback error>
+        <Feedback>
           We could not load your profile.{' '}
           <button onClick={() => void query.refetch()}>Try again</button>
         </Feedback>
@@ -130,18 +124,14 @@ export function ProfilePage() {
 }
 function ProfileForms({ profile }: { profile: Profile }) {
   const client = useQueryClient();
+  const notify = useNotification();
   const router = useRouter();
   const photoInput = useRef<HTMLInputElement>(null);
   const pendingFocus = useRef<'name' | keyof PasswordValues | null>(null);
   const [photoBusy, setPhotoBusy] = useState(false);
-  const [photoError, setPhotoError] = useState('');
-  const [photoSuccess, setPhotoSuccess] = useState('');
-  const [detailsSuccess, setDetailsSuccess] = useState('');
-  const [passwordSuccess, setPasswordSuccess] = useState('');
   const [revokeOpen, setRevokeOpen] = useState(false);
   const [revokeBusy, setRevokeBusy] = useState(false);
   const [revokeError, setRevokeError] = useState('');
-  const [revokeSuccess, setRevokeSuccess] = useState('');
   const details = useForm<ProfileValues>({
     resolver: zodResolver(profileSchema),
     mode: 'onSubmit',
@@ -167,12 +157,11 @@ function ProfileForms({ profile }: { profile: Profile }) {
   };
   const saveDetails = (event: FormEvent<HTMLFormElement>) => {
     void details.handleSubmit(async (values) => {
-      setDetailsSuccess('');
       try {
         const result = await updateProfile(values.name);
         applyProfile(result);
         details.reset({ name: result.user.name || '' });
-        setDetailsSuccess('Your profile has been updated.');
+        notify.success('Your profile has been updated.');
       } catch (error) {
         if (error instanceof ApiError && error.fieldErrors?.name) {
           pendingFocus.current = 'name';
@@ -183,11 +172,10 @@ function ProfileForms({ profile }: { profile: Profile }) {
   };
   const savePassword = (event: FormEvent<HTMLFormElement>) => {
     void passwords.handleSubmit(async (values) => {
-      setPasswordSuccess('');
       try {
         await changePassword(values);
         passwords.reset();
-        setPasswordSuccess('Password updated. Your other sessions have been signed out.');
+        notify.success('Password updated. Your other sessions have been signed out.');
       } catch (error) {
         let mapped = false;
         for (const name of ['current_password', 'new_password', 'confirm_password'] as const) {
@@ -209,35 +197,33 @@ function ProfileForms({ profile }: { profile: Profile }) {
     const file = event.target.files?.[0];
     event.target.value = '';
     if (!file) return;
-    setPhotoError('');
-    setPhotoSuccess('');
+
     if (!['image/png', 'image/jpeg', 'image/webp'].includes(file.type)) {
-      setPhotoError('Choose a JPG, PNG or WebP image.');
+      notify.error('Choose a JPG, PNG or WebP image.');
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
-      setPhotoError('Choose an image smaller than 5 MiB.');
+      notify.error('Choose an image smaller than 5 MiB.');
       return;
     }
     setPhotoBusy(true);
     try {
       applyProfile(await uploadAvatar(file));
-      setPhotoSuccess('Profile photo updated.');
+      notify.success('Profile photo updated.');
     } catch (error) {
-      setPhotoError(message(error));
+      notify.error(message(error));
     } finally {
       setPhotoBusy(false);
     }
   };
   const deletePhoto = async () => {
     setPhotoBusy(true);
-    setPhotoError('');
-    setPhotoSuccess('');
+
     try {
       applyProfile(await removeAvatar());
-      setPhotoSuccess('Profile photo removed.');
+      notify.success('Profile photo removed.');
     } catch (error) {
-      setPhotoError(message(error));
+      notify.error(message(error));
     } finally {
       setPhotoBusy(false);
     }
@@ -248,7 +234,7 @@ function ProfileForms({ profile }: { profile: Profile }) {
     try {
       await revokeOtherSessions();
       setRevokeOpen(false);
-      setRevokeSuccess('Other sessions signed out. You are still signed in here.');
+      notify.success('Other sessions signed out. You are still signed in here.');
     } catch (error) {
       setRevokeError(message(error));
     } finally {
@@ -292,8 +278,7 @@ function ProfileForms({ profile }: { profile: Profile }) {
             hidden
           />
         </div>
-        {photoError && <Feedback error>{photoError}</Feedback>}
-        {photoSuccess && <Feedback>{photoSuccess}</Feedback>}
+
         <form onSubmit={saveDetails} noValidate>
           <fieldset disabled={busy} className={styles.fields}>
             <div className={styles.field}>
@@ -302,7 +287,7 @@ function ProfileForms({ profile }: { profile: Profile }) {
                 id="profile-name"
                 autoComplete="nickname"
                 placeholder="Your name"
-                {...details.register('name', { onChange: () => setDetailsSuccess('') })}
+                {...details.register('name')}
                 aria-invalid={!!details.formState.errors.name}
                 aria-describedby={details.formState.errors.name ? 'profile-name-error' : undefined}
               />
@@ -326,9 +311,9 @@ function ProfileForms({ profile }: { profile: Profile }) {
             </div>
           </fieldset>
           {details.formState.errors.root && (
-            <Feedback error>{details.formState.errors.root.message}</Feedback>
+            <Feedback>{details.formState.errors.root.message}</Feedback>
           )}
-          {detailsSuccess && <Feedback>{detailsSuccess}</Feedback>}
+
           <div className={styles.formFooter}>
             <span>Keep your workspace personal.</span>
             <button className={styles.primary} disabled={busy} type="submit">
@@ -399,9 +384,9 @@ function ProfileForms({ profile }: { profile: Profile }) {
               </div>
             </fieldset>
             {passwords.formState.errors.root && (
-              <Feedback error>{passwords.formState.errors.root.message}</Feedback>
+              <Feedback>{passwords.formState.errors.root.message}</Feedback>
             )}
-            {passwordSuccess && <Feedback>{passwordSuccess}</Feedback>}
+
             <div className={styles.formFooter}>
               <span>Keep your password private.</span>
               <button type="submit" className={styles.primary} disabled={busy}>
@@ -452,7 +437,6 @@ function ProfileForms({ profile }: { profile: Profile }) {
             Sign out other sessions
           </button>
         </div>
-        {revokeSuccess && <Feedback>{revokeSuccess}</Feedback>}
       </section>
       {revokeOpen && (
         <ConfirmDialog

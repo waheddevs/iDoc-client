@@ -143,7 +143,9 @@ export function WorkspaceShell({ children }: { children: React.ReactNode }) {
         {links}
       </aside>
       <div className={styles.main}>
-        <header className={styles.header}>
+        <header
+          className={`${styles.header} ${pathname.endsWith('/profile') ? styles.profileHeader : ''}`}
+        >
           <button
             className={styles.mobileMenu}
             aria-label="Open navigation"
@@ -154,13 +156,11 @@ export function WorkspaceShell({ children }: { children: React.ReactNode }) {
           <Link href="/" className={styles.mobileBrand} aria-label="iDoc home">
             <Logo />
           </Link>
-          <span className={styles.pageTitle}>
-            {pathname.endsWith('/profile')
-              ? 'Profile'
-              : pathname.endsWith('/documents')
-                ? 'Documents'
-                : 'Chat'}
-          </span>
+          {!pathname.endsWith('/profile') && (
+            <span className={styles.pageTitle}>
+              {pathname.endsWith('/documents') ? 'Documents' : 'Chat'}
+            </span>
+          )}
           <button
             className={styles.mobileNewChat}
             aria-label="New chat"

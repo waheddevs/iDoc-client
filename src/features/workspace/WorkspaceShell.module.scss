@@ -228,3 +228,9 @@ a.account:hover,
 .account[aria-current] {
   background: var(--elevated);
 }
+
+@media (min-width: 768px) {
+  .profileHeader {
+    display: none;
+  }
+}

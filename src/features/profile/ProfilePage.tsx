@@ -1,5 +1,4 @@
 'use client';
-import Link from 'next/link';
 import {
   useEffect,
   useRef,
@@ -14,7 +13,6 @@ import { useForm, type UseFormRegisterReturn } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   AlertCircle,
-  ArrowLeft,
   Camera,
   Check,
   Eye,
@@ -97,12 +95,7 @@ export function ProfilePage() {
   const query = useQuery({ queryKey: ['session'], queryFn: getProfile });
   return (
     <div className={styles.page}>
-      <Link href="/chat" className={styles.back}>
-        <ArrowLeft size={16} />
-        Back to workspace
-      </Link>
       <div className={styles.heading}>
-        <span className="eyebrow">Your account</span>
         <h1>Profile &amp; settings</h1>
         <p>A little more you. Manage your details and account security.</p>
       </div>

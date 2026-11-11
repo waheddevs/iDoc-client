@@ -1,22 +1,13 @@
 .page {
-  width: min(100%, 920px);
+  width: 100%;
   margin: 0 auto;
-  padding: 28px 40px 64px;
-}
-.back {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  color: var(--muted);
-  &:hover {
-    color: var(--text);
-  }
+  padding: 28px 32px 48px;
 }
 .heading {
-  margin: 28px 0;
+  margin: 0 0 24px;
+  text-align: left;
   h1 {
-    margin: 8px 0 10px;
+    margin: 0 0 8px;
     font-size: 30px;
   }
   p {
@@ -232,8 +223,7 @@
     min-height: 36px;
   }
 }
-.errorNotice,
-.successNotice {
+.errorNotice {
   display: flex;
   align-items: flex-start;
   gap: 9px;
@@ -250,11 +240,6 @@
   span {
     overflow-wrap: anywhere;
   }
-}
-.successNotice {
-  border-color: #5ac39c22;
-  background: #5ac39c07;
-  color: #92d5b7;
 }
 .loading {
   display: flex;

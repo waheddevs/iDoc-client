@@ -1,0 +1,343 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport">
+<title>iDoc - Mobile Login</title>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              orange: '#FF5E1E',
+              burnt: '#C2410C',
+              burntDark: '#9A3412',
+              glow: 'rgba(255, 94, 30, 0.15)',
+              darkBg: '#090A0D',
+              surface: '#111317',
+              surfaceBorder: '#23272F',
+              subtleBorder: '#1A1D24',
+              inputBg: '#161920',
+              inputBorder: '#282C37'
+            }
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"Segoe UI"', 'Roboto', 'sans-serif'],
+            mono: ['"SF Mono"', 'ui-monospace', 'Menlo', 'Monaco', 'monospace']
+          },
+          boxShadow: {
+            'glow-orange': '0 0 45px -8px rgba(255, 94, 30, 0.35)',
+            'card-lift': '0 12px 30px -10px rgba(0, 0, 0, 0.75)'
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Custom Atmospheric Styles -->
+<style data-purpose="background-glow">
+    .horizon-glow {
+      position: fixed;
+      top: -80px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 480px;
+      height: 380px;
+      background: radial-gradient(circle at 50% 25%, rgba(255, 94, 30, 0.22) 0%, rgba(194, 65, 12, 0.08) 45%, rgba(9, 10, 13, 0) 75%);
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(28px);
+    }
+    .grid-backdrop {
+      background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+  </style>
+<style data-purpose="micro-interactions">
+    /* iOS friendly active scale feedback */
+    .tap-press:active {
+      transform: scale(0.98);
+      transition: transform 0.1s ease-out;
+    }
+    /* Hide scrollbars for pill selectors */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<!-- END: Custom Atmospheric Styles -->
+</head>
+<body class="bg-brand-darkBg text-neutral-200 font-sans antialiased selection:bg-orange-500 selection:text-white min-h-screen relative flex flex-col justify-between overflow-x-hidden grid-backdrop">
+<!-- Background Horizon Illumination -->
+<div aria-hidden="true" class="horizon-glow"></div>
+<!-- BEGIN: TopNavigation -->
+<header class="sticky top-0 z-40 w-full h-14 bg-brand-darkBg/80 backdrop-blur-md border-b border-brand-subtleBorder px-4 flex items-center justify-between" data-purpose="top-bar">
+<!-- Brand Wordmark -->
+<a aria-label="iDoc Home" class="flex items-center gap-1.5 focus:outline-none" href="#"><img src="https://lh3.googleusercontent.com/aida/ALJJyrAMaiS60xp9vSZlNfvrlJokR2qyYW3JiRZxIu6FU4pek4DXTRvlZpei9skXFJ3UG2yZ6Ab_KcqyVibLJxWhjd9hEs-p5K3_Jzr3qmvvIh_WjQU0gm2JDV5I9jFeyopz6S32WCdX_rlBcdkmmso_yd4PgBt9DFfSzfbtw_LPtDeW4lFQtIKYhSk6SaLUUUa8aStK14WpXpwOU0v6bgf0DAuxpR7IA5GMXZCAgomo0I17" alt="iDoc" class="h-7 w-auto object-contain"><span class="text-[10px] font-mono font-medium px-1.5 py-0.5 rounded bg-neutral-900 border border-neutral-700/60 text-neutral-400 ml-1">V2.4</span></a>
+<!-- Return to Home CTA -->
+<a class="inline-flex items-center gap-1.5 text-xs font-medium text-neutral-400 hover:text-white transition-colors py-2 px-2.5 rounded-lg active:bg-neutral-800/60" data-purpose="nav-back-button" href="#">
+<svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Back to home</span>
+</a>
+</header>
+<!-- END: TopNavigation -->
+<!-- BEGIN: MainContent -->
+<main class="relative z-10 w-full max-w-[390px] mx-auto px-4 pt-3 pb-8 flex-1 flex flex-col justify-start">
+<!-- BEGIN: BrandTeaser -->
+<section class="mb-5" data-purpose="workspace-hero-teaser">
+<!-- Glow Tag Badge -->
+<div class="flex items-center mb-3">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-brand-orange/10 border border-brand-orange/30 shadow-[0_0_12px_rgba(255,94,30,0.15)]">
+<span class="w-1.5 h-1.5 rounded-full bg-brand-orange animate-ping"></span>
+<span class="text-[10.5px] font-mono tracking-wider font-semibold text-brand-orange uppercase">Secure Workspace Access</span>
+</div>
+</div>
+<!-- Main Headline -->
+<h1 class="text-2xl sm:text-[26px] font-bold text-white tracking-tight leading-tight mb-1.5">
+        Welcome back.
+      </h1>
+<p class="text-xs text-neutral-400 leading-relaxed max-w-[340px]">
+        Sign in to reconnect to your document library, grounded chat sessions, and verified source citations.
+      </p>
+<!-- Compact 3D Document Sheet Preview -->
+<div class="mt-4 relative group" data-purpose="citation-preview-widget">
+<!-- Back stacked decorative cards -->
+<div class="absolute -top-1.5 inset-x-3 h-10 bg-neutral-900/60 rounded-xl border border-neutral-800 -z-10 scale-[0.96] opacity-60"></div>
+<div class="absolute -top-3 inset-x-6 h-10 bg-neutral-950 rounded-xl border border-neutral-800/40 -z-20 scale-[0.92] opacity-40"></div>
+<!-- Front Active Verified Passage Card -->
+<div class="p-3.5 rounded-xl bg-gradient-to-b from-[#14171E] to-[#0E1015] border border-neutral-700/60 shadow-lg relative overflow-hidden">
+<div class="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-brand-orange/80 to-transparent"></div>
+<div class="flex items-center justify-between pb-2 border-b border-neutral-800/80 mb-2">
+<div class="flex items-center gap-1.5">
+<span class="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-brand-orange/20 text-brand-orange border border-brand-orange/30">[S1]</span>
+<span class="text-[11px] font-mono text-neutral-300 truncate max-w-[170px]">Security_Compliance_2024.docx</span>
+</div>
+<span class="text-[10px] font-mono text-neutral-500">Page 14</span>
+</div>
+<p class="text-[11px] italic text-neutral-300 leading-snug line-clamp-2">
+            “...All persistent storage volumes and vector index embeddings employ AES-256-GCM encryption at rest...”
+          </p>
+<div class="mt-2.5 pt-2 border-t border-neutral-800/60 flex items-center justify-between text-[10px] font-mono">
+<span class="inline-flex items-center gap-1 text-emerald-400">
+<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+              Grounded passage
+            </span>
+<span class="text-neutral-500">0.941 Mean Cosine</span>
+</div>
+</div>
+</div>
+</section>
+<!-- END: BrandTeaser -->
+<!-- BEGIN: LoginFormSection -->
+<section class="w-full" data-purpose="login-form-container">
+<!-- Preview State Switcher Controls -->
+<div class="mb-2.5">
+<div class="flex items-center justify-between text-[10px] font-mono text-neutral-400 uppercase tracking-wider mb-1.5 px-1">
+<span>Form Preview State</span>
+<span class="text-brand-orange font-semibold" id="current-state-badge">Default</span>
+</div>
+<div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
+<button class="state-pill px-2.5 py-1 text-[11px] rounded-lg font-mono transition-all bg-neutral-800 text-white border border-brand-orange/40 shrink-0" data-state="default" onclick="setFormState('default')" type="button">
+            Default
+          </button>
+<button class="state-pill px-2.5 py-1 text-[11px] rounded-lg font-mono transition-all bg-neutral-900/90 text-neutral-400 border border-neutral-800 hover:text-white shrink-0" data-state="validation" onclick="setFormState('validation')" type="button">
+            Validation Error
+          </button>
+<button class="state-pill px-2.5 py-1 text-[11px] rounded-lg font-mono transition-all bg-neutral-900/90 text-neutral-400 border border-neutral-800 hover:text-white shrink-0" data-state="offline" onclick="setFormState('offline')" type="button">
+            Server Offline
+          </button>
+<button class="state-pill px-2.5 py-1 text-[11px] rounded-lg font-mono transition-all bg-neutral-900/90 text-neutral-400 border border-neutral-800 hover:text-white shrink-0" data-state="submitting" onclick="setFormState('submitting')" type="button">
+            Submitting
+          </button>
+</div>
+</div>
+<!-- Elevated Form Card -->
+<div class="w-full bg-[#111318] border border-[#232730] rounded-2xl p-5 shadow-card-lift relative backdrop-blur-sm">
+<!-- Interactive Error/Alert Banner (Toggled via preview states) -->
+<div class="hidden mb-4 p-3 rounded-xl bg-red-950/40 border border-red-500/40 text-red-200 text-xs flex items-start gap-2.5 transition-all" id="form-error-banner">
+<svg class="w-4 h-4 text-red-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<div class="flex-1">
+<p class="font-semibold text-red-300" id="error-title">Authentication Failed</p>
+<p class="text-[11px] text-red-300/80 mt-0.5 leading-snug" id="error-desc">Invalid identity credentials or session expired.</p>
+</div>
+</div>
+<form class="space-y-4" id="auth-form" novalidate="" onsubmit="event.preventDefault();">
+<!-- Email Field -->
+<div class="space-y-1.5" data-purpose="email-field-group">
+<label class="block text-[11px] font-mono uppercase tracking-wider text-neutral-400" for="email">
+              Email Address
+            </label>
+<div class="relative">
+<input autocomplete="email" class="w-full h-11 px-3.5 rounded-xl bg-[#161922] border border-[#2A2E3D] text-sm text-neutral-100 placeholder:text-neutral-600 focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange transition-colors" id="email" inputmode="email" placeholder="auditor@secops.corp" required="" type="email" value="auditor@secops.corp">
+</div>
+<p class="hidden text-[11px] text-red-400 mt-1 font-mono" id="email-field-error">Please enter a valid SecOps organization email.</p>
+</div>
+<!-- Password Field with Show/Hide Toggle -->
+<div class="space-y-1.5" data-purpose="password-field-group">
+<div class="flex items-center justify-between">
+<label class="block text-[11px] font-mono uppercase tracking-wider text-neutral-400" for="password">
+                Password
+              </label>
+<span class="text-[10px] font-mono text-neutral-500">Min. 8 characters</span>
+</div>
+<div class="relative flex items-center">
+<input autocomplete="current-password" class="w-full h-11 pl-3.5 pr-11 rounded-xl bg-[#161922] border border-[#2A2E3D] text-sm text-neutral-100 placeholder:text-neutral-600 focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange transition-colors font-mono tracking-wider" id="password" placeholder="••••••••••••••••" required="" type="password" value="SecureEnterprisePassphrase2024!">
+<button aria-label="Toggle password visibility" class="absolute right-0 top-0 h-11 w-11 flex items-center justify-center text-neutral-400 hover:text-white active:scale-90 transition-transform focus:outline-none" id="toggle-password-btn" onclick="togglePasswordVisibility()" type="button">
+<!-- Eye Icon (Visible) -->
+<svg class="w-4 h-4" fill="none" id="eye-icon" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<!-- Eye Slash Icon (Hidden by default) -->
+<svg class="w-4 h-4 hidden" fill="none" id="eye-slash-icon" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+<p class="hidden text-[11px] text-red-400 mt-1 font-mono" id="password-field-error">Password requires at least 8 characters.</p>
+</div>
+<!-- Primary Sign-In Button with State Variations -->
+<div class="pt-2">
+<button class="w-full h-12 rounded-xl bg-brand-burnt hover:bg-brand-orange active:bg-brand-burntDark text-white font-semibold text-sm tracking-wide shadow-md shadow-orange-950/40 flex items-center justify-center gap-2 tap-press transition-all duration-150" id="submit-btn" type="submit">
+<!-- Default state text -->
+<span id="btn-text">Sign in</span>
+<svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" id="btn-arrow" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<!-- Submitting Spinner (Honest indeterminate spinner, hidden by default) -->
+<span class="hidden" id="btn-spinner">
+<svg class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+<path class="opacity-75" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" fill="currentColor"></path>
+</svg>
+</span>
+</button>
+</div>
+</form>
+<!-- Form Footnote & Direct Endpoint Info -->
+<div class="mt-4 pt-4 border-t border-neutral-800/80 text-center">
+<p class="text-[11px] font-mono text-neutral-500 leading-normal">
+            Direct authentication communicates with your configured backend endpoint.
+          </p>
+</div>
+</div>
+</section>
+<!-- END: LoginFormSection -->
+</main>
+<!-- END: MainContent -->
+<!-- BEGIN: SecurityFooter -->
+<footer class="relative z-10 w-full max-w-[390px] mx-auto px-4 pb-6 pt-2 text-center" data-purpose="security-fabric-footer">
+<div class="flex items-center justify-center gap-2 text-[10.5px] font-mono text-neutral-400">
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+<span>Python API Bridge: Operational</span>
+</div>
+<div class="mt-1 text-[10px] font-mono text-neutral-500 tracking-tight">
+      iDoc Security Fabric · TLS 1.3 Strict Grounding
+    </div>
+</footer>
+<!-- END: SecurityFooter -->
+<!-- BEGIN: ComponentInteractionsScript -->
+<script data-purpose="form-state-handler">
+    // Password Visibility Toggle
+    function togglePasswordVisibility() {
+      const passwordInput = document.getElementById('password');
+      const eyeIcon = document.getElementById('eye-icon');
+      const eyeSlashIcon = document.getElementById('eye-slash-icon');
+
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        eyeIcon.classList.add('hidden');
+        eyeSlashIcon.classList.remove('hidden');
+      } else {
+        passwordInput.type = 'password';
+        eyeIcon.classList.remove('hidden');
+        eyeSlashIcon.classList.add('hidden');
+      }
+    }
+
+    // Interactive Demo State Manager
+    function setFormState(state) {
+      const banner = document.getElementById('form-error-banner');
+      const errTitle = document.getElementById('error-title');
+      const errDesc = document.getElementById('error-desc');
+      const emailInput = document.getElementById('email');
+      const passwordInput = document.getElementById('password');
+      const emailErr = document.getElementById('email-field-error');
+      const passErr = document.getElementById('password-field-error');
+      const submitBtn = document.getElementById('submit-btn');
+      const btnText = document.getElementById('btn-text');
+      const btnArrow = document.getElementById('btn-arrow');
+      const btnSpinner = document.getElementById('btn-spinner');
+      const stateBadge = document.getElementById('current-state-badge');
+
+      // Update pill buttons active styling
+      document.querySelectorAll('.state-pill').forEach(btn => {
+        if (btn.dataset.state === state) {
+          btn.classList.add('bg-neutral-800', 'text-white', 'border-brand-orange/40');
+          btn.classList.remove('bg-neutral-900/90', 'text-neutral-400', 'border-neutral-800');
+        } else {
+          btn.classList.remove('bg-neutral-800', 'text-white', 'border-brand-orange/40');
+          btn.classList.add('bg-neutral-900/90', 'text-neutral-400', 'border-neutral-800');
+        }
+      });
+
+      // Reset base input highlights
+      emailInput.classList.remove('border-red-500', 'ring-1', 'ring-red-500');
+      passwordInput.classList.remove('border-red-500', 'ring-1', 'ring-red-500');
+      emailErr.classList.add('hidden');
+      passErr.classList.add('hidden');
+      banner.classList.add('hidden');
+      btnSpinner.classList.add('hidden');
+      btnText.classList.remove('hidden');
+      btnArrow.classList.remove('hidden');
+      submitBtn.disabled = false;
+      submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+
+      if (state === 'default') {
+        stateBadge.textContent = 'Default';
+        stateBadge.className = 'text-brand-orange font-semibold';
+      } else if (state === 'validation') {
+        stateBadge.textContent = 'Validation Error';
+        stateBadge.className = 'text-red-400 font-semibold';
+        
+        banner.classList.remove('hidden');
+        banner.className = 'mb-4 p-3 rounded-xl bg-red-950/40 border border-red-500/40 text-red-200 text-xs flex items-start gap-2.5 transition-all';
+        errTitle.textContent = 'Validation Failed';
+        errDesc.textContent = 'Please verify your SecOps credential syntax before proceeding.';
+
+        emailInput.classList.add('border-red-500', 'ring-1', 'ring-red-500');
+        emailErr.classList.remove('hidden');
+      } else if (state === 'offline') {
+        stateBadge.textContent = 'Server Offline';
+        stateBadge.className = 'text-amber-400 font-semibold';
+
+        banner.classList.remove('hidden');
+        banner.className = 'mb-4 p-3 rounded-xl bg-amber-950/40 border border-amber-500/40 text-amber-200 text-xs flex items-start gap-2.5 transition-all';
+        errTitle.textContent = 'Auth Service Unreachable';
+        errDesc.textContent = 'Local Python API Bridge connection timed out (HTTP 503). Retrying socket link...';
+      } else if (state === 'submitting') {
+        stateBadge.textContent = 'Submitting...';
+        stateBadge.className = 'text-blue-400 font-semibold';
+
+        submitBtn.disabled = true;
+        submitBtn.classList.add('opacity-85', 'cursor-not-allowed');
+        btnText.textContent = 'Authenticating TLS Bridge...';
+        btnArrow.classList.add('hidden');
+        btnSpinner.classList.remove('hidden');
+      }
+    }
+  </script>
+<!-- END: ComponentInteractionsScript -->
+
+
+
+
+</body></html>

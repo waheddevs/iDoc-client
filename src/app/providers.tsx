@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider, QueryCache, MutationCache } from '@tanstack/react-query';
 import { ApiError } from '@/lib/api/client';
+import { NotificationProvider } from '@/contexts/NotificationContext';
 import { isSigningOut } from '@/features/auth/api';
 export function Providers({ children }: { children: React.ReactNode }) {
   const [client] = useState(() => {
@@ -29,5 +30,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
       window.removeEventListener('idoc:session-expired', expire);
     };
   }, [client]);
-  return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
+  return (
+    <QueryClientProvider client={client}>
+      <NotificationProvider>{children}</NotificationProvider>
+    </QueryClientProvider>
+  );
 }

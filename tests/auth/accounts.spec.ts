@@ -10,6 +10,9 @@ async function createAccount(page: Page, address: string) {
   await page.getByLabel('Confirm password', { exact: true }).fill(password);
   await page.getByRole('button', { name: 'Create account', exact: true }).click();
   await expect(page).toHaveURL(/\/chat$/);
+  await expect(page.getByRole('link', { name: 'Profile', exact: true })).toContainText(
+    address.split('@')[0],
+  );
 }
 async function upload(page: Page, name: string, text: string) {
   await page.goto('/documents');

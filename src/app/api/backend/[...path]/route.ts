@@ -11,6 +11,10 @@ import {
 } from '@/lib/server/backend';
 export const runtime = 'nodejs';
 const rules: Record<string, string[]> = {
+  'v1/profile': ['GET', 'PATCH'],
+  'v1/profile/avatar': ['GET', 'POST', 'DELETE'],
+  'v1/profile/password': ['POST'],
+  'v1/profile/sessions/revoke': ['POST'],
   health: ['GET'],
   ready: ['GET'],
   'v1/config': ['GET'],

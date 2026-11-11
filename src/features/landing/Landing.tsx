@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import { Avatar } from '@/components/ui/Avatar';
+import type { User } from '@/lib/api/types';
 import {
   ArrowRight,
   ArrowUpRight,
@@ -56,7 +58,7 @@ const faqs = [
     'Conversations are currently kept for your active workspace session. Starting a new chat or refreshing clears the current conversation. Your uploaded documents remain in your library.',
   ],
 ];
-export function Landing() {
+export function Landing({ user = null }: { user?: User | null }) {
   return (
     <LandingMotion className={styles.page}>
       <nav data-reveal="down" className={styles.nav} aria-label="Main navigation">
@@ -68,7 +70,16 @@ export function Landing() {
           <a href="#features">Features</a>
           <a href="#faq">FAQ</a>
         </div>
-        <Link href="/login" className="button">Sign in <ArrowUpRight size={15} /></Link>
+        {user ? (
+          <Link href="/chat" aria-label="Open your dashboard" className={styles.profileLink}>
+            <Avatar user={user} />
+            <span>{user.name || user.email.split('@')[0]}</span>
+          </Link>
+        ) : (
+          <Link href="/login" className="main-button">
+            Sign in <ArrowUpRight size={15} />
+          </Link>
+        )}
       </nav>
       <main id="main">
         <section className={styles.hero}>

@@ -14,6 +14,7 @@ import {
   ArrowUpRight,
 } from 'lucide-react';
 import { Logo } from '@/components/brand/Logo';
+import { Avatar } from '@/components/ui/Avatar';
 import { Dialog } from '@/components/ui/Dialog';
 import { useWorkspace } from './WorkspaceContext';
 import { UploadDialog } from '@/features/documents/UploadDialog';
@@ -81,7 +82,30 @@ export function WorkspaceShell({ children }: { children: React.ReactNode }) {
         </Link>
       </nav>
       <div className={styles.sidebarBottom}>
-        <div className={styles.account}><UserRound size={19} /><span>{w.preview ? 'Demo workspace' : w.local ? 'Local workspace' : w.sessionQuery.data?.user.email || 'Your account'}</span></div>
+        {!w.preview && !w.local ? (
+          <Link
+            href="/profile"
+            aria-label="Profile"
+            aria-current={pathname === '/profile' ? 'page' : undefined}
+            className={styles.account}
+            onClick={() => setMobile(false)}
+          >
+            <Avatar user={w.sessionQuery.data?.user} size={32} />
+            <div>
+              <strong>
+                {w.sessionQuery.data?.user.name ||
+                  w.sessionQuery.data?.user.email.split('@')[0] ||
+                  'Your account'}
+              </strong>
+              <small>Profile &amp; settings</small>
+            </div>
+          </Link>
+        ) : (
+          <div className={styles.account}>
+            <UserRound size={19} />
+            <span>{w.preview ? 'Demo workspace' : 'Local workspace'}</span>
+          </div>
+        )}
         <button
           onClick={() => {
             setMobile(false);

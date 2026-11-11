@@ -66,3 +66,91 @@
     backdrop-filter: none;
   }
 }
+
+// Compact confirmation treatment; reading panels keep their existing layout.
+.dialog.confirmation {
+  width: min(440px, calc(100% - 32px));
+  max-height: calc(100dvh - 32px);
+  border: 1px solid #ffffff12;
+  border-radius: 24px;
+  background: linear-gradient(145deg, #191b1f, #111317 65%);
+  box-shadow:
+    0 32px 100px #0008,
+    inset 0 1px 0 #ffffff04;
+  animation: confirmation-enter 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  &::backdrop {
+    background: #050608b8;
+    backdrop-filter: blur(7px);
+    animation: confirmation-backdrop 250ms ease-out both;
+  }
+  header {
+    position: relative;
+    display: block;
+    border: 0;
+    padding: 28px 28px 12px;
+    h2 {
+      margin-top: 20px;
+      font-size: 21px;
+      letter-spacing: -0.035em;
+    }
+    button {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      color: #92969f;
+      transition:
+        background-color 240ms ease,
+        color 240ms ease;
+      &:hover:not(:disabled) {
+        background: #ffffff08;
+        color: var(--text);
+      }
+    }
+  }
+  .body {
+    padding: 0 28px 28px;
+  }
+}
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid #ff91601a;
+  border-radius: 14px;
+  background: #ff6b2b0c;
+  color: #ffaf8c;
+}
+@keyframes confirmation-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes confirmation-backdrop {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (max-width: 480px) {
+  .dialog.confirmation {
+    border-radius: 20px;
+    header {
+      padding: 24px 22px 12px;
+    }
+    .body {
+      padding: 0 22px 22px;
+    }
+  }
+}

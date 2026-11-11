@@ -1,7 +1,7 @@
 'use client';
 import { createContext, useContext, useRef, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { getSession } from '@/features/auth/api';
+import { getProfile } from '@/features/profile/api';
 import { api, queryKeys } from '@/lib/api/client';
 import type { Config, Doc, Message, Source } from '@/lib/api/types';
 import { listDocuments, uploadDocument, deleteDocument } from '@/features/documents/api';
@@ -34,7 +34,7 @@ function useWorkspaceState(preview: boolean, local: boolean) {
   });
   const sessionQuery = useQuery({
     queryKey: ['session'],
-    queryFn: getSession,
+    queryFn: getProfile,
     enabled: !preview && !local,
   });
   const configQuery = useQuery({

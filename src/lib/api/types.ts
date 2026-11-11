@@ -1,4 +1,4 @@
-export type User = { id: string; email: string; name?: string };
+export type User = { id: string; email: string; name?: string; avatar_version?: string | null };
 export type Doc = {
   document_id: string;
   file_name: string;
@@ -34,3 +34,5 @@ export type Completion = {
   choices: { message: { role: 'assistant'; content: string } }[];
   sources: Source[] | null;
 };
+
+export type Profile = { user: User; has_password: boolean; google_connected: boolean; created_at: number };

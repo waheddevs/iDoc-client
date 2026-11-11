@@ -9,6 +9,9 @@ export function Dialog({
   drawer = false,
   busy = false,
   readingPanel = false,
+  confirmation = false,
+  icon,
+  describedBy,
 }: {
   title: string;
   children: React.ReactNode;
@@ -16,6 +19,9 @@ export function Dialog({
   drawer?: boolean;
   busy?: boolean;
   readingPanel?: boolean;
+  confirmation?: boolean;
+  icon?: React.ReactNode;
+  describedBy?: string;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   const id = useId();
@@ -23,6 +29,7 @@ export function Dialog({
     const previous = document.activeElement as HTMLElement | null;
     const dialog = ref.current;
     dialog?.showModal();
+    dialog?.querySelector<HTMLElement>('[data-dialog-initial-focus]')?.focus();
     return () => {
       dialog?.close();
       previous?.focus();
@@ -32,7 +39,9 @@ export function Dialog({
     <dialog
       ref={ref}
       aria-labelledby={id}
-      className={`${styles.dialog} ${drawer ? styles.drawer : ''} ${readingPanel ? styles.readingPanel : ''}`}
+      aria-describedby={describedBy}
+      aria-busy={busy || undefined}
+      className={`${styles.dialog} ${drawer ? styles.drawer : ''} ${readingPanel ? styles.readingPanel : ''} ${confirmation ? styles.confirmation : ''}`}
       onCancel={(e) => {
         e.preventDefault();
         if (!busy) onClose();
@@ -43,6 +52,11 @@ export function Dialog({
     >
       <div className={styles.inner}>
         <header>
+          {icon && (
+            <span className={styles.icon} aria-hidden="true">
+              {icon}
+            </span>
+          )}
           <h2 id={id}>{title}</h2>
           <button aria-label={`Close ${title}`} disabled={busy} onClick={onClose}>
             <X size={18} />
